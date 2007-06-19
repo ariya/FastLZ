@@ -55,13 +55,22 @@
 #endif
 
 /*
- * Prevent accessing more than 8-bit at once.
+ * Prevent accessing more than 8-bit at once, except on x86 architectures.
  */
 #if !defined(FASTLZ_STRICT_ALIGN)
-#if defined(__sparc) || defined(__sparc__)
 #define FASTLZ_STRICT_ALIGN
-#elif defined(_M_IA64) || defined(__ia64__) || defined(__ia64)
-#define FASTLZ_STRICT_ALIGN
+#if defined(__i386__) || defined(__386)  /* GNU C, Sun Studio */
+#undef FASTLZ_STRICT_ALIGN
+#elif defined(__i486__) || defined(__i586__) || defined(__i686__) /* GNU C */
+#undef FASTLZ_STRICT_ALIGN
+#elif defined(_M_IX86) /* Intel, MSVC */
+#undef FASTLZ_STRICT_ALIGN
+#elif defined(__386)
+#undef FASTLZ_STRICT_ALIGN
+#elif defined(_X86_) /* MinGW */
+#undef FASTLZ_STRICT_ALIGN
+#elif defined(__I86__) /* Digital Mars */
+#undef FASTLZ_STRICT_ALIGN
 #endif
 #endif
 
@@ -81,15 +90,16 @@ int fastlz_decompress(const void* input, int length, void* output, int maxout);
 #define MAX_LEN       264  /* 256 + 8 */
 #define MAX_DISTANCE 8192
 
+#if !defined(FASTLZ_STRICT_ALIGN)
+#define FASTLZ_READU16(p) *((const flzuint16*)(p)) 
+#else
+#define FASTLZ_READU16(p) ((p)[0] | (p)[1]<<8)
+#endif
+
 #define HASH_LOG  13
 #define HASH_SIZE (1<< HASH_LOG)
 #define HASH_MASK  (HASH_SIZE-1)
-
-#if !defined(FASTLZ_STRICT_ALIGN)
-#define HASH_FUNCTION(v,p) { v = *((const flzuint16*)p); v ^= *((const flzuint16*)(p+1))^(v>>(16-HASH_LOG));v &= HASH_MASK; }
-#else
-#define HASH_FUNCTION(v,p) { v =  p[1] | p[0]<<8; v ^= (p[2] | p[1]<<8)^(v>>(16-HASH_LOG)); v &= HASH_MASK; }
-#endif
+#define HASH_FUNCTION(v,p) { v = FASTLZ_READU16(p); v ^= FASTLZ_READU16(p+1)^(v>>(16-HASH_LOG));v &= HASH_MASK; }
 
 #undef FASTLZ_LEVEL
 #define FASTLZ_LEVEL 1
@@ -204,6 +214,17 @@ static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* 
     /* comparison starting-point */
     const flzuint8* anchor = ip;
 
+    /* check for a run */
+#if FASTLZ_LEVEL==2
+    if(ip[0] == ip[-1] && FASTLZ_READU16(ip-1)==FASTLZ_READU16(ip+1))
+    {
+      distance = 1;
+      ip += 3;
+      ref = anchor - 1 + 3;
+      goto match;
+    }
+#endif
+
     /* find potential match */
     HASH_FUNCTION(hval,ip);
     hslot = htab + hval;
@@ -233,6 +254,8 @@ static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* 
         goto literal;
       len += 2;
     }
+    
+    match:
 #endif
 
     /* last matched byte */
@@ -345,14 +368,14 @@ static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* 
     }
 #endif
 
-    /* assuming literal copy */
-    *op++ = MAX_COPY-1;
-
     /* update the hash at match boundary */
     HASH_FUNCTION(hval,ip);
     htab[hval] = ip++;
     HASH_FUNCTION(hval,ip);
     htab[hval] = ip++;
+
+    /* assuming literal copy */
+    *op++ = MAX_COPY-1;
 
     continue;
 
@@ -362,8 +385,8 @@ static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* 
       copy++;
       if(FASTLZ_UNEXPECT_CONDITIONAL(copy == MAX_COPY))
       {
-       copy = 0;
-       *op++ = MAX_COPY-1;
+        copy = 0;
+        *op++ = MAX_COPY-1;
       }
   }
 
