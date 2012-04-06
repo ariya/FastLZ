@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<meta name="keywords" content="fastlz, compression, lempel-ziv, LZ77" />
+<title>Platform and compiler-specific Notes on FastLZ</title>
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="stylesheet" type="text/css" href="fastlz.css" media="screen" />
+</head>
+<body>
+
+<div id="wrapper">
+
+<div id="header">
+	    <ul>
+        <li><a href="index.html" title="Home">Home</a></li>
+        <li><a href="download.htm" title="Download">Download</a></li>
+        <li><a href="faq.htm" title="Frequently asked questions">FAQ</a></li>
+        <li><a href="support.htm" title="Support">Support</a></li>
+      </ul>
+</div>
+
+<p><a href="index.html"><img class="logo" src="images/logo.png"
+width="200" height="65" alt="FastLZ"/></a></p>
+
+<br style="clear: both;"/>
+<p></p>
+
+<p style="padding-top: 20px;"><img class="header" src="images/icon_help.png" 
+alt="help" width="32" height="32"/><b class="title">platform-specific notes</b><br/>
+<span class="byline">and some workarounds</span>
+<br style="clear: both;"/></p>
+
+<p>&nbsp;</p>
+
+<p><b class="title">Known to work</b></p>
+
+<p>FastLZ is known to work without problem on the following platforms
+and compilers combinations:</p>
+
+<ul>
+<li>GCC version 3.x on Linux, FreeBSD, and Windows (MinGW)</li>
+<li>GCC version 4.x on Linux and DOS (DJGPP)</li>
+<li>Microsoft Visual Studio .NET 2003 and 2005</li>
+<li>Borland C++ 5.5 command-line compiler for Windows</li>
+<li>OpenWatcom C/C++ 1.6 for Windows</li>
+<li>Digital Mars C/C++ 8.49 for Windows</li>
+<li>Intel C++ compiler 9.1 for Linux (32-bit and 64-bit)</li>
+<li>Intel C++ compiler 10 for Windows</li>
+<li>Sun Studio 11 C compiler for SunOS/Solaris</li>
+<li>LCC-Win32 3.8 for Windows</li>
+<li>Pelles C 4.5 for Windows</li>
+</ul>
+
+<p>FastLZ should work without problem on many different processor 
+architectures, including but not limited to x86, x86-64, IA64, 
+SPARC and many others.</p>
+
+<p><b class="title">Unsupported</b></p>
+
+<p>FastLZ is <b>not</b> supported yet on the following platforms
+and compilers combinations:</p>
+
+<ul>
+<li>All version of Turbo C and Turbo C++ for DOS</li>
+<li>All version of Borland C++ for DOS</li>
+<li>All version of Microsoft C compiler for DOS</li>
+</ul>
+
+<p>All other compilers/platforms are not thoroughly tested so it may or
+may not work.</p>
+<p>Please <a href="support.htm#bug">report</a> encountered problems to the
+<a href="http://code.google.com/p/fastlz/issues/list">issue tracker</a>.</p>
+
+<p><b class="title">Important Issues</b></p>
+
+<p><i>Intel C++ compiler</i></p>
+
+<p>Some versions of Intel C++ compiler might not be able to compile FastLZ
+properly. The compiler will give &quot;internal error&quot; and then abort
+the compilation because sometimes it can not handle __builtin_expect
+correctly.</p>
+
+<p>The solution is to update the compiler to the latest version.</p>
+
+<p>Another workaround is to specify option -no-gcc when invoking the
+compiler.</p>
+
+<p><i>DOS platform</i></p>
+
+<p>FastLZ can only be used with programs running for DOS (MS-DOS, PC-DOS, 
+FreeDOS) with GCC 4.x by using DJGPP or by cross-compiling. All other compilers 
+are not supported yet.</p>
+
+</div>
+
+<div id="footer">
+Copyright &copy; 2007-2011 <a href="http://ariya.ofilabs.com">Ariya Hidayat</a>.
+</div>
+
+</body>
+</html>

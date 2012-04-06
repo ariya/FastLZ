@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<meta name="keywords" content="fastlz, compression, lempel-ziv, LZ77" />
+<title>Benchmarks (speed comparison)</title>
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="stylesheet" type="text/css" href="fastlz.css" media="screen" />
+</head>
+<body>
+
+<div id="wrapper">
+
+<div id="header">
+	    <ul>
+        <li><a href="index.html" title="Home">Home</a></li>
+        <li><a href="download.htm" title="Download">Download</a></li>
+        <li><a href="faq.htm" title="Frequently asked questions">FAQ</a></li>
+        <li><a href="support.htm" title="Support">Support</a></li>
+      </ul>
+</div>
+
+<p><a href="index.html"><img class="logo" src="images/logo.png"
+width="200" height="65" alt="FastLZ"/></a></p>
+
+<br style="clear: both;"/>
+<p></p>
+
+<p style="padding-top: 20px;"><img class="header" src="images/icon_fast.png" 
+alt="benchmark" width="32" height="32"/><b class="title">benchmark results</b> 
+<sup><a href="#note1">1</a></sup><br/>
+<span class="byline">seeing is believing</span>
+<br style="clear: both;"/></p>
+
+<p>&nbsp;</p>
+
+<p><b class="title">1 billion byte text file</b></p>
+
+<p>A text file with the size of 1,000,000,000 bytes 
+<sup>[<a href="#note1">2</a>]</sup> is compressed using 
+FastLZ-based <a href="6pack.htm">6pack</a> compressor 
+<sup>[<a href="#note3">3</a>]</sup> and the de-facto 
+standard zip utility <sup>[<a href="#note4">4</a>]</sup>. The time for
+compression and decompression <sup>[<a href="#note5">5</a>, 
+<a href="#note6">6</a>]</sup> and the size of the compressed file are 
+compared, giving the following result (shorter is better):</p>
+
+<p><img src="images/bench_enwik9.png" width="600" height="165" 
+style="align:left; float:none; padding-bottom: 5px;"/></p>
+
+<p>It is obvious that zip can compress better since FastLZ is not 
+optimized for compression ratio, but rather the speed. Although 
+the compressed size of zip is 77% compared to that of FastLZ, 
+FastLZ compresses almost 4x faster and decompressed almost 2x 
+faster than zip, reaching the remarkable compression speed of 
+over 50 MB/s for the above test case.</p>
+
+
+<p><b>Notes</b></p>
+
+<div style="font-size: smaller;">
+<p>[1] Please take into account that benchmark results always depend on the 
+test data. Real-world performance will vary based on system configuration, 
+working data, and other factors. 
+</p>
+<p><a name="note2"/>[2] It is the first one billion characters of 
+English Wikipedia dump on Mar. 3, 2006. See also 
+<a href="http://www.cs.fit.edu/~mmahoney/compression/textdata.html">test data</a> 
+for large text compression benchmark from Matt Mahoney.</p>
+<p><a name="note3"/>[3] See <a href="6pack.htm">more info on 6pack</a>.</p>
+<p><a name="note4"/>[4] zip command line archiver is taken from 
+<a href="http://www.info-zip.org">Info-ZIP</a>'s zip 3.23. It is executed 
+in the fastest mode, i.e. zip -1.</p>
+<p><a name="note5"/>[5] Test was performed on Intel Pentium 4-M 1.8 GHz, 
+512 MB RAM running Windows XP.</p>
+<p><a name="note6"/>[6] Execution time was measured using timer 3.01 
+utility from <a href="http://www.7-zip.org/igor.html">Igor Pavlov</a>. Only 
+process time (kernel time + user time) is considered, thereby excluding
+disk I/O time.</p>
+</div>
+
+</div>
+
+<div id="footer">
+Copyright &copy; 2007-2011 <a href="http://ariya.ofilabs.com">Ariya Hidayat</a>.
+</div>
+
+</body>
+</html>

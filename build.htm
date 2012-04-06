@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<meta name="keywords" content="fastlz, compression, lempel-ziv, LZ77" />
+<title>Building FastLZ</title>
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="stylesheet" type="text/css" href="fastlz.css" media="screen" />
+</head>
+<body>
+
+<div id="wrapper">
+
+<div id="header">
+	    <ul>
+        <li><a href="index.html" title="Home">Home</a></li>
+        <li><a href="download.htm" title="Download">Download</a></li>
+        <li><a href="faq.htm" title="Frequently asked questions">FAQ</a></li>
+        <li><a href="support.htm" title="Support">Support</a></li>
+      </ul>
+</div>
+
+<p><a href="index.html"><img class="logo" src="images/logo.png"
+width="200" height="65" alt="FastLZ"/></a></p>
+
+<br style="clear: both;"/>
+<p></p>
+
+<p style="padding-top: 20px;"><img class="header" src="images/icon_help.png" 
+alt="compile" width="32" height="32"/><b>easy integration</b><br/>
+<span class="byline">lightweight and hassle-free</span>
+<br style="clear: both;"/></p>
+
+<p>FastLZ is only a library. It must be integrated into an application 
+in order to be useful. Since it consists of only one source file (fastlz.c) 
+and one header file (fastlz.h), it is very easy to use. Simply add these 
+two files into the application project, then all FastLZ routines are available.
+</p>
+
+<p>FastLZ is supported in many different platforms/compiler. 
+See also <a href="compilers.htm">platform and compiler-specific notes</a>.</p>
+
+<p style="padding-top: 20px;"><img class="header" src="images/icon_console.png" 
+alt="console" width="32" height="32"/><b>doing by example</b><br/>
+<span class="byline">extremely fast file compressor</a>
+<br style="clear: both;"/></p>
+
+<p>A simple file compressor called <a href="6pack.htm">6pack</a> is included 
+as an example of how to use FastLZ. The corresponding decompressor is 6unpack.</p>
+
+<p>To compile using GCC:</p>
+<pre>gcc -o 6pack 6pack.c fastlz.c
+gcc -o 6unpack 6unpack.c fastlz.c
+</pre>
+
+<p>To compile using MinGW:</p>
+<pre>mingw32-gcc -o 6pack 6pack.c fastlz.c
+mingw32-gcc -o 6unpack 6unpack.c fastlz.c
+</pre>
+
+<p>To compile using Microsoft Visual C++:</p>
+<pre>cl 6pack.c fastlz.c
+cl 6unpack.c fastlz.c</pre>
+
+<p>To compile using Borland C++:</p>
+<pre>bcc32 6pack.c fastlz.c
+bcc32 6unpack.c fastlz.c</pre>
+
+<p>To compile using OpenWatcom C/C++:</p>
+<pre>cl386 6pack.c fastlz.c
+cl386 6unpack.c fastlz.c
+</pre>
+
+<p>To compile using Digital Mars C/C++:</p>
+<pre>dmc 6pack.c fastlz.c
+dmc 6unpack.c fastlz.c
+</pre>
+
+<p>To compile using Intel C++ compiler for Windows:</p>
+<pre>icl 6pack.c fastlz.c
+icl 6unpack.c fastlz.c
+</pre>
+
+<p>To compile using Intel C++ compiler for Linux:</p>
+<pre>icc -o 6pack 6pack.c fastlz.c
+icc -o 6unpack 6unpack.c fastlz.c
+</pre>
+
+<p>To compile 6pack using LCC-Win32:</p>
+<pre>lc 6pack.c fastlz.c
+lc 6unpack.c fastlz.c
+</pre>
+
+<p>To compile 6pack using Pelles C:</p>
+<pre>pocc 6pack.c
+pocc 6unpack.c
+pocc fastlz.c
+polink 6pack.obj fastlz.obj
+polink 6unpack.obj fastlz.obj</pre>
+
+<p>For speed optimization, always use proper compile flags for optimization options. Typical compiler flags are given below:</p>
+
+<ul>
+<li>GCC: <b>-march=pentium -O3 -fomit-frame-pointer -mtune=pentium</b></li>
+<li>Borland C++: <b>-O2 -5</b></li> 
+<li>Digital Mars C/C++: <b>-o+all -5</b></li>
+<li>Intel C++ (Windows): <b>/O3 /Qipo </b>
+<li>Intel C++ (Linux): <b>-O2 -march=pentium -mtune=pentium </b>
+<li>LCC-Win32: <b>-O</b></li>
+<li>Pelles C: <b>/O2</b></li>
+</ul>
+
+<p>See also the information on <a href="6pack.htm">using 6pack</a>.</p>
+
+</div>
+
+</div>
+
+<div id="footer">
+Copyright &copy; 2007-2011 <a href="http://ariya.ofilabs.com">Ariya Hidayat</a>.
+</div>
+
+</body>
+</html>
