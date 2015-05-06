@@ -30,10 +30,10 @@
 #define FASTLZ_VERSION 0x000100
 
 #define FASTLZ_VERSION_MAJOR     0
-#define FASTLZ_VERSION_MINOR     0
+#define FASTLZ_VERSION_MINOR     2
 #define FASTLZ_VERSION_REVISION  0
 
-#define FASTLZ_VERSION_STRING "0.1.0"
+#define FASTLZ_VERSION_STRING "0.2.0"
 
 #if defined (__cplusplus)
 extern "C" {
@@ -54,6 +54,12 @@ extern "C" {
 */
 
 int fastlz_compress(const void* input, int length, void* output);
+
+/**
+	Returns the size of the buffer needed for compression.
+	A utility method for call fastlz_compress().
+*/
+#define fastlz_compress_buffer_size(sz) (sz*9/8 > 66 ? sz*9/8 : 66)
 
 /**
   Decompress a block of compressed data and returns the size of the 

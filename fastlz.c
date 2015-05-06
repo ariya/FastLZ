@@ -24,6 +24,12 @@
   THE SOFTWARE.
 */
 
+/*
+	Modifications by Lee Thomason.
+	- Utility method for compress buffer size.
+	- Switch to standard ints.
+*/
+
 #if !defined(FASTLZ__COMPRESSOR) && !defined(FASTLZ_DECOMPRESSOR)
 
 /*
@@ -74,12 +80,7 @@
 #endif
 #endif
 
-/*
- * FIXME: use preprocessor magic to set this on different platforms!
- */
-typedef unsigned char  flzuint8;
-typedef unsigned short flzuint16;
-typedef unsigned int   flzuint32;
+#include <stdint.h>
 
 /* prototypes */
 int fastlz_compress(const void* input, int length, void* output);
@@ -91,7 +92,7 @@ int fastlz_decompress(const void* input, int length, void* output, int maxout);
 #define MAX_DISTANCE 8192
 
 #if !defined(FASTLZ_STRICT_ALIGN)
-#define FASTLZ_READU16(p) *((const flzuint16*)(p)) 
+#define FASTLZ_READU16(p) *((const uint16_t*)(p)) 
 #else
 #define FASTLZ_READU16(p) ((p)[0] | (p)[1]<<8)
 #endif
@@ -140,7 +141,7 @@ int fastlz_compress(const void* input, int length, void* output)
 int fastlz_decompress(const void* input, int length, void* output, int maxout)
 {
   /* magic identifier for compression level */
-  int level = ((*(const flzuint8*)input) >> 5) + 1;
+  int level = ((*(const uint8_t*)input) >> 5) + 1;
 
   if(level == 1)
     return fastlz1_decompress(input, length, output, maxout);
@@ -165,16 +166,16 @@ int fastlz_compress_level(int level, const void* input, int length, void* output
 
 static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* output)
 {
-  const flzuint8* ip = (const flzuint8*) input;
-  const flzuint8* ip_bound = ip + length - 2;
-  const flzuint8* ip_limit = ip + length - 12;
-  flzuint8* op = (flzuint8*) output;
+  const uint8_t* ip = (const uint8_t*) input;
+  const uint8_t* ip_bound = ip + length - 2;
+  const uint8_t* ip_limit = ip + length - 12;
+  uint8_t* op = (uint8_t*) output;
 
-  const flzuint8* htab[HASH_SIZE];
-  const flzuint8** hslot;
-  flzuint32 hval;
+  const uint8_t* htab[HASH_SIZE];
+  const uint8_t** hslot;
+  uint32_t hval;
 
-  flzuint32 copy;
+  uint32_t copy;
 
   /* sanity check */
   if(FASTLZ_UNEXPECT_CONDITIONAL(length < 4))
@@ -205,14 +206,14 @@ static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* 
   /* main loop */
   while(FASTLZ_EXPECT_CONDITIONAL(ip < ip_limit))
   {
-    const flzuint8* ref;
-    flzuint32 distance;
+    const uint8_t* ref;
+    uint32_t distance;
 
     /* minimum match length */
-    flzuint32 len = 3;
+    uint32_t len = 3;
 
     /* comparison starting-point */
-    const flzuint8* anchor = ip;
+    const uint8_t* anchor = ip;
 
     /* check for a run */
 #if FASTLZ_LEVEL==2
@@ -267,7 +268,7 @@ static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* 
     if(!distance)
     {
       /* zero distance means a run */
-      flzuint8 x = ip[-1];
+      uint8_t x = ip[-1];
       while(ip < ip_bound)
         if(*ref++ != x) break; else ip++;
     }
@@ -411,31 +412,31 @@ static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* 
 
 #if FASTLZ_LEVEL==2
   /* marker for fastlz2 */
-  *(flzuint8*)output |= (1 << 5);
+  *(uint8_t*)output |= (1 << 5);
 #endif
 
-  return op - (flzuint8*)output;
+  return op - (uint8_t*)output;
 }
 
 static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void* output, int maxout)
 {
-  const flzuint8* ip = (const flzuint8*) input;
-  const flzuint8* ip_limit  = ip + length;
-  flzuint8* op = (flzuint8*) output;
-  flzuint8* op_limit = op + maxout;
-  flzuint32 ctrl = (*ip++) & 31;
+  const uint8_t* ip = (const uint8_t*) input;
+  const uint8_t* ip_limit  = ip + length;
+  uint8_t* op = (uint8_t*) output;
+  uint8_t* op_limit = op + maxout;
+  uint32_t ctrl = (*ip++) & 31;
   int loop = 1;
 
   do
   {
-    const flzuint8* ref = op;
-    flzuint32 len = ctrl >> 5;
-    flzuint32 ofs = (ctrl & 31) << 8;
+    const uint8_t* ref = op;
+    uint32_t len = ctrl >> 5;
+    uint32_t ofs = (ctrl & 31) << 8;
 
     if(ctrl >= 32)
     {
 #if FASTLZ_LEVEL==2
-      flzuint8 code;
+      uint8_t code;
 #endif
       len--;
       ref -= ofs;
@@ -466,7 +467,7 @@ static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void
       if (FASTLZ_UNEXPECT_CONDITIONAL(op + len + 3 > op_limit))
         return 0;
 
-      if (FASTLZ_UNEXPECT_CONDITIONAL(ref-1 < (flzuint8 *)output))
+      if (FASTLZ_UNEXPECT_CONDITIONAL(ref-1 < (uint8_t *)output))
         return 0;
 #endif
 
@@ -478,7 +479,7 @@ static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void
       if(ref == op)
       {
         /* optimize copy for a run */
-        flzuint8 b = ref[-1];
+        uint8_t b = ref[-1];
         *op++ = b;
         *op++ = b;
         *op++ = b;
@@ -488,8 +489,8 @@ static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void
       else
       {
 #if !defined(FASTLZ_STRICT_ALIGN)
-        const flzuint16* p;
-        flzuint16* q;
+        const uint16_t* p;
+        uint16_t* q;
 #endif
         /* copy from reference */
         ref--;
@@ -506,9 +507,9 @@ static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void
         }
 
         /* copy 16-bit at once */
-        q = (flzuint16*) op;
+        q = (uint16_t*) op;
         op += len;
-        p = (const flzuint16*) ref;
+        p = (const uint16_t*) ref;
         for(len>>=1; len > 4; len-=4)
         {
           *q++ = *p++;
@@ -545,7 +546,7 @@ static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void
   }
   while(FASTLZ_EXPECT_CONDITIONAL(loop));
 
-  return op - (flzuint8*)output;
+  return op - (uint8_t*)output;
 }
 
 #endif /* !defined(FASTLZ_COMPRESSOR) && !defined(FASTLZ_DECOMPRESSOR) */
