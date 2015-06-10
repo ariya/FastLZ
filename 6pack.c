@@ -437,7 +437,7 @@ int benchmark_speed(int compress_level, const char* input_file)
   if(bytes_read != fsize)
   {
     printf("Error reading file %s!\n", shown_name);
-    printf("Read %d bytes, expecting %d bytes\n", bytes_read, fsize);
+    printf("Read %lu bytes, expecting %lu bytes\n", bytes_read, fsize);
     free(buffer);
     free(result);
     fclose(in);
@@ -632,5 +632,5 @@ int main(int argc, char** argv)
     return pack_file(compress_level, input_file, output_file);
 
   /* unreachable */
-  return 0;
+  //return 0;
 }
