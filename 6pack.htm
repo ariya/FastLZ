@@ -1,88 +1,86 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-<meta name="keywords" content="fastlz, compression, lempel-ziv, LZ77" />
-<title>6pack</title>
-<link rel="shortcut icon" href="favicon.ico" />
-<link rel="stylesheet" type="text/css" href="fastlz.css" media="screen" />
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <meta name="keywords" content="fastlz, compression, lempel-ziv, LZ77" />
+  <title>6pack</title>
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="fastlz.css" media="screen" />
 </head>
+
 <body>
 
-<div id="wrapper">
+  <div id="wrapper">
 
-<div id="header">
-	    <ul>
+    <div id="header">
+      <ul>
         <li><a href="index.html" title="Home">Home</a></li>
         <li><a href="download.htm" title="Download">Download</a></li>
         <li><a href="faq.htm" title="Frequently asked questions">FAQ</a></li>
         <li><a href="support.htm" title="Support">Support</a></li>
       </ul>
-</div>
+    </div>
 
-<p><a href="index.html"><img class="logo" src="images/logo.png"
-width="200" height="65" alt="FastLZ"/></a></p>
+    <p>
+      <a href="index.html"><img class="logo" src="images/logo.png" width="200" height="65" alt="FastLZ" /></a>
+    </p>
 
-<br style="clear: both;"/>
-<p></p>
+    <br style="clear: both;" />
+    <p></p>
 
-<p style="padding-top: 20px;"><img class="header" src="images/icon_help.png" 
-alt="help" width="32" height="32"/><b>6pack and 6unpack</b><br/>
-<span class="byline">simple compressor using FastLZ</span>
-<br style="clear: both;"/></p>
+    <p style="padding-top: 20px;"><img class="header" src="images/icon_help.png" alt="help" width="32" height="32" /><b>6pack and 6unpack</b><br/>
+      <span class="byline">simple compressor using FastLZ</span>
+      <br style="clear: both;" /></p>
 
-<p>&nbsp;</p>
+    <p>&nbsp;</p>
 
-<p>6pack is an example program, a simple file compressor using FastLZ
-compression. It is created as an example to use FastLZ. 6pack is not optimized
-for performance. It is considered experimental software, so do not use it
-for critical data.</p>
+    <p>6pack is an example program, a simple file compressor using FastLZ compression. It is created as an example to use FastLZ.
+      6pack is not optimized for performance. It is considered experimental software, so do not use it for critical data.</p>
 
-<p>To get and compile 6pack, check the <a href="download.htm">download</a> page 
-and also <a href="build.htm">instructions on how to compile it</a>.</p>
+    <p>To get and compile 6pack, check the <a href="download.htm">download</a> page and also <a href="build.htm">instructions on how to compile it</a>.</p>
 
-<b>Compression</b>
+    <b>Compression</b>
 
-<p>To compress a file using 6pack:</p>
-<pre>6pack [options] input-file output-file</pre>
+    <p>To compress a file using 6pack:</p>
+    <pre>6pack [options] input-file output-file</pre>
 
-<p>Possible options are:</p>
-<ul>
-<li>-1  compress faster</li>
-<li>-2  compress better (default)</li>
-<li>-v  display version and copyright information</li>
-<li>-mem  test compression and decompression speed (Windows only)</li>
-</ul>
+    <p>Possible options are:</p>
+    <ul>
+      <li>-1 compress faster</li>
+      <li>-2 compress better (default)</li>
+      <li>-v display version and copyright information</li>
+      <li>-mem test compression and decompression speed (Windows only)</li>
+    </ul>
 
-<p>Example:</p>
-<pre>6pack report.doc report.6pk</pre>
+    <p>Example:</p>
+    <pre>6pack report.doc report.6pk</pre>
 
-<p>Path location is not stored in the package. If the specified output 
-file already exists, 6pack will not compress the input file. Also, 
-6pack will not compress a 6pack package.</p>
+    <p>Path location is not stored in the package. If the specified output file already exists, 6pack will not compress the
+      input file. Also, 6pack will not compress a 6pack package.</p>
 
-<p>To show help on usage, just execute 6pack without any arguments.</p>
+    <p>To show help on usage, just execute 6pack without any arguments.</p>
 
-<b>Decompression</b>
+    <b>Decompression</b>
 
-<p>To decompress the package:</p>
-<pre>6unpack package-file</pre>
+    <p>To decompress the package:</p>
+    <pre>6unpack package-file</pre>
 
-<p>Example:</p>
-<pre>6unpack report.6pk</pre>
+    <p>Example:</p>
+    <pre>6unpack report.6pk</pre>
 
-<p>File inside the package will be unpacked in the current directory.</p>
+    <p>File inside the package will be unpacked in the current directory.</p>
 
-<p>If extracted file already exists, 6unpack will skip it, i.e. it won't
-overwrite any file.</p>
+    <p>If extracted file already exists, 6unpack will skip it, i.e. it won't overwrite any file.</p>
 
 
 
-</div>
+  </div>
 
-<div id="footer">
-Copyright &copy; 2007-2017 <a href="https://ariya.io/">Ariya Hidayat</a>.
-</div>
+  <div id="footer">
+    Copyright &copy; 2007-2017 <a href="https://ariya.io/">Ariya Hidayat</a>.
+  </div>
 
 </body>
+
 </html>

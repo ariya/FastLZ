@@ -1,67 +1,63 @@
-body
-{
+body {
   background-image: url(images/shade.png);
   background-repeat: repeat-x;
-  margin: 0px; padding: 0px;
+  margin: 0px;
+  padding: 0px;
   font-family: "Segoe UI", "DejaVu Sans", "Bitstream Vera Sans", verdana, sans-serif;
   font-size: smaller;
 }
 
-p, li
-{
+p,
+li {
   line-height: 150%;
-  margin: 0; padding: 0;
+  margin: 0;
+  padding: 0;
   margin-bottom: 8px;
 }
 
-pre
-{
-margin-left: 20px; margin-right: 50px; padding: 2px;
-padding-left: 20px;
-background-color: #eeeeee;
+pre {
+  margin-left: 20px;
+  margin-right: 50px;
+  padding: 2px;
+  padding-left: 20px;
+  background-color: #eeeeee;
 }
 
-img
-{
+img {
   border: none;
   padding: 2px;
   margin: 0px;
 }
 
-#wrapper
-{
+#wrapper {
   margin: auto;
   width: 610px;
 }
 
-#wrapper .logo
-{
-  margin: 0px; padding: 0px;
+#wrapper .logo {
+  margin: 0px;
+  padding: 0px;
 }
 
-div.left 
-{
+div.left {
   width: 45%;
   clear: both;
   float: left;
 }
 
-div.right
-{
+div.right {
   width: 48%;
   float: right;
 }
 
-img.header
-{
+img.header {
   margin-right: 8px;
   padding-top: 3px;
   padding-bottom: 0px;
   float: left;
 }
 
-#wrapper .subtitle
-{
+#wrapper .subtitle {
   font-family: Georgia, "Times New Roman", serif;
   font-style: italic;
   font-size: larger;
@@ -70,69 +66,60 @@ img.header
   margin-bottom: 40px;
 }
 
-#wrapper .byline
-{
+#wrapper .byline {
   color: green;
 }
 
-#wrapper .title
-{
+#wrapper .title {
   font-family: Georgia, "Times New Roman", serif;
   font-size: larger;
 }
 
-#header
-{
+#header {
   float: top;
   position: absolute;
   top: 0px;
   left: 50%;
   display: block;
-  background-color:  #48a2d4;
+  background-color: #48a2d4;
   padding: 0px;
   color: #fff;
   line-height: 100%;
   text-weight: bold;
 }
 
-#header li
-{
-	display: inline;
+#header li {
+  display: inline;
   line-height: 100%;
 }
 
-#header ul
-{
+#header ul {
   line-height: 100%;
-  margin: 0; padding: 0;
+  margin: 0;
+  padding: 0;
 }
-
 
 #header a:link,
 #header a:visited,
-#header a:hover
-{
-	display: block;
-	float: left;
-	padding: 4px 5px 5px 5px;
-	text-decoration: none;
-	color: #fff;
-	xmargin-left: 4px;
-	border: 1px solid #48a2d4;
+#header a:hover {
+  display: block;
+  float: left;
+  padding: 4px 5px 5px 5px;
+  text-decoration: none;
+  color: #fff;
+  xmargin-left: 4px;
+  border: 1px solid #48a2d4;
 }
 
-#header a:hover
-{
-	color: #fff;
-	background: #80bedd;
-	text-decoration: none;
-	border: 1px solid #fff;
+#header a:hover {
+  color: #fff;
+  background: #80bedd;
+  text-decoration: none;
+  border: 1px solid #fff;
 }
 
-
-#footer
-{
-clear: both;
+#footer {
+  clear: both;
   margin: auto;
   text-align: center;
   margin-top: 20px;

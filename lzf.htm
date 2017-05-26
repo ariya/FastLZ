@@ -1,100 +1,95 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-<meta name="keywords" content="fastlz, compression, lempel-ziv, LZ77" />
-<title>Replacing liblzf with FastLZ</title>
-<link rel="shortcut icon" href="favicon.ico" />
-<link rel="stylesheet" type="text/css" href="fastlz.css" media="screen" />
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <meta name="keywords" content="fastlz, compression, lempel-ziv, LZ77" />
+  <title>Replacing liblzf with FastLZ</title>
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="fastlz.css" media="screen" />
 </head>
+
 <body>
 
-<div id="wrapper">
+  <div id="wrapper">
 
-<div id="header">
-	    <ul>
+    <div id="header">
+      <ul>
         <li><a href="index.html" title="Home">Home</a></li>
         <li><a href="download.htm" title="Download">Download</a></li>
         <li><a href="faq.htm" title="Frequently asked questions">FAQ</a></li>
         <li><a href="support.htm" title="Support">Support</a></li>
       </ul>
-</div>
+    </div>
 
-<p><a href="index.html"><img class="logo" src="images/logo.png"
-width="200" height="65" alt="FastLZ"/></a></p>
+    <p>
+      <a href="index.html"><img class="logo" src="images/logo.png" width="200" height="65" alt="FastLZ" /></a>
+    </p>
 
-<br style="clear: both;"/>
-<p></p>
+    <br style="clear: both;" />
+    <p></p>
 
-<p style="padding-top: 20px;"><img class="header" src="images/icon_help.png" 
-alt="help" width="32" height="32"/><b class="title">replacing liblzf with FastLZ</b><br/>
-<span class="byline">data and source compatible</span>
-<br style="clear: both;"/></p>
+    <p style="padding-top: 20px;"><img class="header" src="images/icon_help.png" alt="help" width="32" height="32" /><b class="title">replacing liblzf with FastLZ</b><br/>
+      <span class="byline">data and source compatible</span>
+      <br style="clear: both;" /></p>
 
-<p>&nbsp;</p>
+    <p>&nbsp;</p>
 
-<p>It is possible to use FastLZ as a drop-in replacement for
-<a href="http://software.schmorp.de/pkg/liblzf.html">Marc Lehmann's LibLZF</a>.
-</p>
+    <p>It is possible to use FastLZ as a drop-in replacement for
+      <a href="http://software.schmorp.de/pkg/liblzf.html">Marc Lehmann's LibLZF</a>.
+    </p>
 
-<p>The following graph shows the performance comparison 
-<sup>[<a href="#note1">1</a>,<a href="#note2">2</a>,<a href="#note3">3</a>]</sup>
-(shorter is better). 
-The test data are the 
-<a href="http://corpus.canterbury.ac.nz/descriptions/#cantrbry">Canterbury Corpus</a> 
-(2.68 MB) and 
-<a href="http://www.data-compression.info/Corpora/SilesiaCorpus/index.htm">Silesia Corpus</a> 
-(96.2 MB)</p>
+    <p>The following graph shows the performance comparison
+      <sup>[<a href="#note1">1</a>,<a href="#note2">2</a>,<a href="#note3">3</a>]</sup> (shorter is better). The test data
+      are the
+      <a href="http://corpus.canterbury.ac.nz/descriptions/#cantrbry">Canterbury Corpus</a> (2.68 MB) and
+      <a href="http://www.data-compression.info/Corpora/SilesiaCorpus/index.htm">Silesia Corpus</a> (96.2 MB)</p>
 
-<p><img src="images/bench_lzf.png" width="550" height="375" 
-style="align:left; float:none; padding-bottom: 5px;"/></p>
+    <p><img src="images/bench_lzf.png" width="550" height="375" style="align:left; float:none; padding-bottom: 5px;" /></p>
 
-<p>To <b>decompress</b> data block which is previously compressed using liblzf,
-use function <tt>fastlz_decompress</tt> as usual. This function can automatically
-detect the correct format and decompress the data properly.</p>
+    <p>To <b>decompress</b> data block which is previously compressed using liblzf, use function <tt>fastlz_decompress</tt>      as usual. This function can automatically detect the correct format and decompress the data properly.</p>
 
-<p>For example, the following code:</p>
-<pre>lzf_decompress(inbuf, length, outbuf, maxout);</pre>
-<p>can be changed to:</p>
-<pre>fastlz_decompress(inbuf, length, outbuf, maxout);</pre>
+    <p>For example, the following code:</p>
+    <pre>lzf_decompress(inbuf, length, outbuf, maxout);</pre>
+    <p>can be changed to:</p>
+    <pre>fastlz_decompress(inbuf, length, outbuf, maxout);</pre>
 
-<p>To <b>compress</b> data into compressed block which should be also
-decompressible using lzf_decompress from liblzf, use the function 
-<tt>fastlz_compress_level</tt> and pass <tt>level</tt> equals to 1.
-lzf_decompress should not have problem decompressing the result.
-</p>
+    <p>To <b>compress</b> data into compressed block which should be also decompressible using lzf_decompress from liblzf, use
+      the function
+      <tt>fastlz_compress_level</tt> and pass <tt>level</tt> equals to 1. lzf_decompress should not have problem decompressing
+      the result.
+    </p>
 
-<p>As an example, the following code:</p>
-<pre>compressed_size = lzf_compress(data, length, output, outsize);</pre>
-<p>can be changed to:</p>
-<pre>compressed_size = fastlz_compress_level(1, data, length, output);</pre>
+    <p>As an example, the following code:</p>
+    <pre>compressed_size = lzf_compress(data, length, output, outsize);</pre>
+    <p>can be changed to:</p>
+    <pre>compressed_size = fastlz_compress_level(1, data, length, output);</pre>
 
-<p>Please note that size of the output buffer is not passed to 
-<tt>fastlz_compress_level</tt>. Simply allocate larger enough output buffer, 
-at least 5% larger than the input buffer (in case the data is 
-not compressible).</p>
+    <p>Please note that size of the output buffer is not passed to
+      <tt>fastlz_compress_level</tt>. Simply allocate larger enough output buffer, at least 5% larger than the input buffer
+      (in case the data is not compressible).</p>
 
-<p><b>Notes</b></p>
+    <p><b>Notes</b></p>
 
-<div style="font-size: smaller;">
+    <div style="font-size: smaller;">
 
-<p><a name="note1"></a>[1] Time was measured using high-resolution timer over several runs,  
-disk I/O is excluded. Test was performed on a system with 
-Intel Core Duo 1.8 GHz processor, 1 GB RAM running SUSE 10.2. 
-Test program (for both FastLZ and LZF) was compiled with GCC 4.1.2 set 
-to generate the fastest code.</p>
+      <p>
+        <a name="note1"></a>[1] Time was measured using high-resolution timer over several runs, disk I/O is excluded. Test was performed
+        on a system with Intel Core Duo 1.8 GHz processor, 1 GB RAM running SUSE 10.2. Test program (for both FastLZ and
+        LZF) was compiled with GCC 4.1.2 set to generate the fastest code.</p>
 
-<p><a name="note2"></a>[2] For the test, LZF version 3.1 (released 30-Nov-2007) 
-was used. Default mode (ULTRA_FAST) was selected.</p>
+      <p>
+        <a name="note2"></a>[2] For the test, LZF version 3.1 (released 30-Nov-2007) was used. Default mode (ULTRA_FAST) was selected.</p>
 
-<p><a name="note3"></a>[3] For the test, FastLZ development version (revision 12 
-in the subversion repository) was used.</p>
+      <p>
+        <a name="note3"></a>[3] For the test, FastLZ development version (revision 12 in the subversion repository) was used.</p>
 
-</div>
+    </div>
 
-<div id="footer">
-Copyright &copy; 2007-2017 <a href="https://ariya.io/">Ariya Hidayat</a>.
-</div>
+    <div id="footer">
+      Copyright &copy; 2007-2017 <a href="https://ariya.io/">Ariya Hidayat</a>.
+    </div>
 
 </body>
+
 </html>
