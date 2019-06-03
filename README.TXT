@@ -1,7 +1,6 @@
 FastLZ - lightning-fast lossless compression library
 
 Author: Ariya Hidayat
-Official website: http://www.fastlz.org
 
 FastLZ is distributed using the MIT license, see file LICENSE
 for details.
