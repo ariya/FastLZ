@@ -26,10 +26,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SIXPACK_VERSION_MAJOR    0
-#define SIXPACK_VERSION_MINOR    1
+#define SIXPACK_VERSION_MAJOR 0
+#define SIXPACK_VERSION_MINOR 1
 #define SIXPACK_VERSION_REVISION 0
-#define SIXPACK_VERSION_STRING   "snapshot 20070615"
+#define SIXPACK_VERSION_STRING "snapshot 20070615"
 
 #include "fastlz.h"
 
@@ -61,48 +61,58 @@
 /* magic identifier for 6pack file */
 static unsigned char sixpack_magic[8] = {137, '6', 'P', 'K', 13, 10, 26, 10};
 
-#define BLOCK_SIZE (2*64*1024)
+#define BLOCK_SIZE (2 * 64 * 1024)
 
 /* prototypes */
-static inline unsigned long update_adler32(unsigned long checksum, const void *buf, int len);
+static inline unsigned long update_adler32(unsigned long checksum,
+                                           const void* buf, int len);
 void usage(void);
-int detect_magic(FILE *f);
-void write_magic(FILE *f);
+int detect_magic(FILE* f);
+void write_magic(FILE* f);
 void write_chunk_header(FILE* f, int id, int options, unsigned long size,
-unsigned long checksum, unsigned long extra);
-unsigned long block_compress(const unsigned char* input, unsigned long length, unsigned char* output);
-int pack_file_compressed(const char* input_file, int method, int level, FILE* f);
-int pack_file(int compress_level, const char* input_file, const char* output_file);
+                        unsigned long checksum, unsigned long extra);
+unsigned long block_compress(const unsigned char* input, unsigned long length,
+                             unsigned char* output);
+int pack_file_compressed(const char* input_file, int method, int level,
+                         FILE* f);
+int pack_file(int compress_level, const char* input_file,
+              const char* output_file);
 
 /* for Adler-32 checksum algorithm, see RFC 1950 Section 8.2 */
 #define ADLER32_BASE 65521
-static inline unsigned long update_adler32(unsigned long checksum, const void *buf, int len)
-{
+static inline unsigned long update_adler32(unsigned long checksum,
+                                           const void* buf, int len) {
   const unsigned char* ptr = (const unsigned char*)buf;
   unsigned long s1 = checksum & 0xffff;
   unsigned long s2 = (checksum >> 16) & 0xffff;
 
-  while(len>0)
-  {
+  while (len > 0) {
     unsigned k = len < 5552 ? len : 5552;
     len -= k;
 
-    while(k >= 8)
-    {
-      s1 += *ptr++; s2 += s1;
-      s1 += *ptr++; s2 += s1;
-      s1 += *ptr++; s2 += s1;
-      s1 += *ptr++; s2 += s1;
-      s1 += *ptr++; s2 += s1;
-      s1 += *ptr++; s2 += s1;
-      s1 += *ptr++; s2 += s1;
-      s1 += *ptr++; s2 += s1;
+    while (k >= 8) {
+      s1 += *ptr++;
+      s2 += s1;
+      s1 += *ptr++;
+      s2 += s1;
+      s1 += *ptr++;
+      s2 += s1;
+      s1 += *ptr++;
+      s2 += s1;
+      s1 += *ptr++;
+      s2 += s1;
+      s1 += *ptr++;
+      s2 += s1;
+      s1 += *ptr++;
+      s2 += s1;
+      s1 += *ptr++;
+      s2 += s1;
       k -= 8;
     }
 
-    while(k-- > 0)
-    {
-      s1 += *ptr++; s2 += s1;
+    while (k-- > 0) {
+      s1 += *ptr++;
+      s2 += s1;
     }
     s1 = s1 % ADLER32_BASE;
     s2 = s2 % ADLER32_BASE;
@@ -110,8 +120,7 @@ static inline unsigned long update_adler32(unsigned long checksum, const void *b
   return (s2 << 16) + s1;
 }
 
-void usage(void)
-{
+void usage(void) {
   printf("6pack: high-speed file compression tool\n");
   printf("Copyright (C) 2007 Ariya Hidayat (ariya@kde.org)\n");
   printf("\n");
@@ -129,8 +138,7 @@ void usage(void)
 
 /* return non-zero if magic sequence is detected */
 /* warning: reset the read pointer to the beginning of the file */
-int detect_magic(FILE *f)
-{
+int detect_magic(FILE* f) {
   unsigned char buffer[8];
   size_t bytes_read;
   int c;
@@ -138,24 +146,18 @@ int detect_magic(FILE *f)
   fseek(f, SEEK_SET, 0);
   bytes_read = fread(buffer, 1, 8, f);
   fseek(f, SEEK_SET, 0);
-  if(bytes_read < 8)
-    return 0;
+  if (bytes_read < 8) return 0;
 
-  for(c = 0; c < 8; c++)
-    if(buffer[c] != sixpack_magic[c])
-      return 0;
+  for (c = 0; c < 8; c++)
+    if (buffer[c] != sixpack_magic[c]) return 0;
 
   return -1;
 }
 
-void write_magic(FILE *f)
-{
-  fwrite(sixpack_magic, 8, 1, f);
-}
+void write_magic(FILE* f) { fwrite(sixpack_magic, 8, 1, f); }
 
 void write_chunk_header(FILE* f, int id, int options, unsigned long size,
-  unsigned long checksum, unsigned long extra)
-{
+                        unsigned long checksum, unsigned long extra) {
   unsigned char buffer[16];
 
   buffer[0] = id & 255;
@@ -178,14 +180,14 @@ void write_chunk_header(FILE* f, int id, int options, unsigned long size,
   fwrite(buffer, 16, 1, f);
 }
 
-int pack_file_compressed(const char* input_file, int method, int level, FILE* f)
-{
+int pack_file_compressed(const char* input_file, int method, int level,
+                         FILE* f) {
   FILE* in;
   unsigned long fsize;
   unsigned long checksum;
   const char* shown_name;
   unsigned char buffer[BLOCK_SIZE];
-  unsigned char result[BLOCK_SIZE*2]; /* FIXME twice is too large */
+  unsigned char result[BLOCK_SIZE * 2]; /* FIXME twice is too large */
   unsigned char progress[20];
   int c;
   unsigned long percent;
@@ -195,8 +197,7 @@ int pack_file_compressed(const char* input_file, int method, int level, FILE* f)
 
   /* sanity check */
   in = fopen(input_file, "rb");
-  if(!in)
-  {
+  if (!in) {
     printf("Error: could not open %s\n", input_file);
     return -1;
   }
@@ -207,8 +208,7 @@ int pack_file_compressed(const char* input_file, int method, int level, FILE* f)
   fseek(in, 0, SEEK_SET);
 
   /* already a 6pack archive? */
-  if(detect_magic(in))
-  {
+  if (detect_magic(in)) {
     printf("Error: file %s is already a 6pack archive!\n", input_file);
     fclose(in);
     return -1;
@@ -216,8 +216,8 @@ int pack_file_compressed(const char* input_file, int method, int level, FILE* f)
 
   /* truncate directory prefix, e.g. "foo/bar/FILE.txt" becomes "FILE.txt" */
   shown_name = input_file + strlen(input_file) - 1;
-  while(shown_name > input_file)
-    if(*(shown_name-1) == PATH_SEPARATOR)
+  while (shown_name > input_file)
+    if (*(shown_name - 1) == PATH_SEPARATOR)
       break;
     else
       shown_name--;
@@ -239,25 +239,22 @@ int pack_file_compressed(const char* input_file, int method, int level, FILE* f)
   buffer[6] = 0;
   buffer[7] = 0;
 #endif
-  buffer[8] = (strlen(shown_name)+1) & 255;
-  buffer[9] = (strlen(shown_name)+1) >> 8;
+  buffer[8] = (strlen(shown_name) + 1) & 255;
+  buffer[9] = (strlen(shown_name) + 1) >> 8;
   checksum = 1L;
   checksum = update_adler32(checksum, buffer, 10);
-  checksum = update_adler32(checksum, shown_name, strlen(shown_name)+1);
-  write_chunk_header(f, 1, 0, 10+strlen(shown_name)+1, checksum, 0);
+  checksum = update_adler32(checksum, shown_name, strlen(shown_name) + 1);
+  write_chunk_header(f, 1, 0, 10 + strlen(shown_name) + 1, checksum, 0);
   fwrite(buffer, 10, 1, f);
-  fwrite(shown_name, strlen(shown_name)+1, 1, f);
-  total_compressed = 16 + 10 + strlen(shown_name)+1;
+  fwrite(shown_name, strlen(shown_name) + 1, 1, f);
+  total_compressed = 16 + 10 + strlen(shown_name) + 1;
 
   /* for progress status */
   memset(progress, ' ', 20);
-  if(strlen(shown_name) < 16)
-    for(c = 0; c < (int)strlen(shown_name); c++)
-      progress[c] = shown_name[c];
-  else
-  {
-    for(c = 0; c < 13; c++)
-      progress[c] = shown_name[c];
+  if (strlen(shown_name) < 16)
+    for (c = 0; c < (int)strlen(shown_name); c++) progress[c] = shown_name[c];
+  else {
+    for (c = 0; c < 13; c++) progress[c] = shown_name[c];
     progress[13] = '.';
     progress[14] = '.';
     progress[15] = ' ';
@@ -265,42 +262,36 @@ int pack_file_compressed(const char* input_file, int method, int level, FILE* f)
   progress[16] = '[';
   progress[17] = 0;
   printf("%s", progress);
-  for(c = 0; c < 50; c++)
-    printf(".");
+  for (c = 0; c < 50; c++) printf(".");
   printf("]\r");
   printf("%s", progress);
 
   /* read file and place in archive */
   total_read = 0;
   percent = 0;
-  for(;;)
-  {
+  for (;;) {
     int compress_method = method;
     int last_percent = (int)percent;
     size_t bytes_read = fread(buffer, 1, BLOCK_SIZE, in);
-    if(bytes_read == 0)
-      break;
+    if (bytes_read == 0) break;
     total_read += bytes_read;
 
     /* for progress */
-    if(fsize < (1<<24))
+    if (fsize < (1 << 24))
       percent = total_read * 100 / fsize;
     else
-      percent = total_read/256 * 100 / (fsize >>8);
+      percent = total_read / 256 * 100 / (fsize >> 8);
     percent >>= 1;
-    while(last_percent < (int)percent)
-    {
+    while (last_percent < (int)percent) {
       printf("#");
       last_percent++;
     }
 
     /* too small, don't bother to compress */
-    if(bytes_read < 32)
-      compress_method = 0;
+    if (bytes_read < 32) compress_method = 0;
 
     /* write to output */
-    switch(compress_method)
-    {
+    switch (compress_method) {
       /* FastLZ */
       case 1:
         chunk_size = fastlz_compress_level(level, buffer, bytes_read, result);
@@ -325,23 +316,19 @@ int pack_file_compressed(const char* input_file, int method, int level, FILE* f)
   }
 
   fclose(in);
-  if(total_read != fsize)
-  {
+  if (total_read != fsize) {
     printf("\n");
     printf("Error: reading %s failed!\n", input_file);
     return -1;
-  }
-  else
-  {
+  } else {
     printf("] ");
-    if(total_compressed < fsize)
-    {
-      if(fsize < (1<<20))
+    if (total_compressed < fsize) {
+      if (fsize < (1 << 20))
         percent = total_compressed * 1000 / fsize;
       else
-        percent = total_compressed/256 * 1000 / (fsize >>8);
+        percent = total_compressed / 256 * 1000 / (fsize >> 8);
       percent = 1000 - percent;
-      printf("%2d.%d%% saved", (int)percent/10, (int)percent%10);
+      printf("%2d.%d%% saved", (int)percent / 10, (int)percent % 10);
     }
     printf("\n");
   }
@@ -349,22 +336,20 @@ int pack_file_compressed(const char* input_file, int method, int level, FILE* f)
   return 0;
 }
 
-int pack_file(int compress_level, const char* input_file, const char* output_file)
-{
+int pack_file(int compress_level, const char* input_file,
+              const char* output_file) {
   FILE* f;
   int result;
 
   f = fopen(output_file, "rb");
-  if(f)
-  {
+  if (f) {
     fclose(f);
     printf("Error: file %s already exists. Aborted.\n\n", output_file);
     return -1;
   }
 
   f = fopen(output_file, "wb");
-  if(!f)
-  {
+  if (!f) {
     printf("Error: could not create %s. Aborted.\n\n", output_file);
     return -1;
   }
@@ -380,8 +365,7 @@ int pack_file(int compress_level, const char* input_file, const char* output_fil
 #ifdef SIXPACK_BENCHMARK_WIN32
 int benchmark_speed(int compress_level, const char* input_file);
 
-int benchmark_speed(int compress_level, const char* input_file)
-{
+int benchmark_speed(int compress_level, const char* input_file) {
   FILE* in;
   unsigned long fsize;
   unsigned long maxout;
@@ -392,8 +376,7 @@ int benchmark_speed(int compress_level, const char* input_file)
 
   /* sanity check */
   in = fopen(input_file, "rb");
-  if(!in)
-  {
+  if (!in) {
     printf("Error: could not open %s\n", input_file);
     return -1;
   }
@@ -404,8 +387,7 @@ int benchmark_speed(int compress_level, const char* input_file)
   fseek(in, 0, SEEK_SET);
 
   /* already a 6pack archive? */
-  if(detect_magic(in))
-  {
+  if (detect_magic(in)) {
     printf("Error: no benchmark for 6pack archive!\n");
     fclose(in);
     return -1;
@@ -413,8 +395,8 @@ int benchmark_speed(int compress_level, const char* input_file)
 
   /* truncate directory prefix, e.g. "foo/bar/FILE.txt" becomes "FILE.txt" */
   shown_name = input_file + strlen(input_file) - 1;
-  while(shown_name > input_file)
-    if(*(shown_name-1) == PATH_SEPARATOR)
+  while (shown_name > input_file)
+    if (*(shown_name - 1) == PATH_SEPARATOR)
       break;
     else
       shown_name--;
@@ -423,8 +405,7 @@ int benchmark_speed(int compress_level, const char* input_file)
   maxout = (maxout < 66) ? 66 : maxout;
   buffer = (unsigned char*)malloc(fsize);
   result = (unsigned char*)malloc(maxout);
-  if(!buffer || !result)
-  {
+  if (!buffer || !result) {
     printf("Error: not enough memory!\n");
     free(buffer);
     free(result);
@@ -434,8 +415,7 @@ int benchmark_speed(int compress_level, const char* input_file)
 
   printf("Reading source file....\n");
   bytes_read = fread(buffer, 1, fsize, in);
-  if(bytes_read != fsize)
-  {
+  if (bytes_read != fsize) {
     printf("Error reading file %s!\n", shown_name);
     printf("Read %d bytes, expecting %d bytes\n", bytes_read, fsize);
     free(buffer);
@@ -444,7 +424,7 @@ int benchmark_speed(int compress_level, const char* input_file)
     return -1;
   }
 
-/* shamelessly copied from QuickLZ 1.20 test program */
+  /* shamelessly copied from QuickLZ 1.20 test program */
   {
     unsigned int j, y;
     size_t i, u = 0;
@@ -458,48 +438,51 @@ int benchmark_speed(int compress_level, const char* input_file)
 
     i = bytes_read;
     fastest = 0.0;
-    for (j = 0; j < 3; j++)
-    {
+    for (j = 0; j < 3; j++) {
       y = 0;
       mbs = GetTickCount();
-      while(GetTickCount() == mbs);
+      while (GetTickCount() == mbs)
+        ;
       mbs = GetTickCount();
-      while(GetTickCount() - mbs < 3000) /* 1% accuracy with 18.2 timer */
+      while (GetTickCount() - mbs < 3000) /* 1% accuracy with 18.2 timer */
       {
         u = fastlz_compress_level(compress_level, buffer, bytes_read, result);
         y++;
       }
 
-      mbs = ((double)i*(double)y)/((double)(GetTickCount() - mbs)/1000.)/1000000.;
+      mbs = ((double)i * (double)y) / ((double)(GetTickCount() - mbs) / 1000.) /
+            1000000.;
       /*printf(" %.1f Mbyte/s  ", mbs);*/
-      if (fastest	< mbs)
-        fastest = mbs;
+      if (fastest < mbs) fastest = mbs;
     }
 
-    printf("\nCompressed %d bytes into %d bytes (%.1f%%) at %.1f Mbyte/s.\n", (unsigned int)i, (unsigned int)u, (double)u/(double)i*100., fastest);
+    printf("\nCompressed %d bytes into %d bytes (%.1f%%) at %.1f Mbyte/s.\n",
+           (unsigned int)i, (unsigned int)u, (double)u / (double)i * 100.,
+           fastest);
 
 #if 1
     fastest = 0.0;
     compressed_size = u;
-    for (j = 0; j < 3; j++)
-    {
+    for (j = 0; j < 3; j++) {
       y = 0;
       mbs = GetTickCount();
-      while(GetTickCount() == mbs);
+      while (GetTickCount() == mbs)
+        ;
       mbs = GetTickCount();
-      while(GetTickCount() - mbs < 3000) /* 1% accuracy with 18.2 timer */
+      while (GetTickCount() - mbs < 3000) /* 1% accuracy with 18.2 timer */
       {
         u = fastlz_decompress(result, compressed_size, buffer, bytes_read);
         y++;
       }
 
-      mbs = ((double)i*(double)y)/((double)(GetTickCount() - mbs)/1000.)/1000000.;
+      mbs = ((double)i * (double)y) / ((double)(GetTickCount() - mbs) / 1000.) /
+            1000000.;
       /*printf(" %.1f Mbyte/s  ", mbs);*/
-      if (fastest	< mbs)
-        fastest = mbs;
+      if (fastest < mbs) fastest = mbs;
     }
 
-  printf("\nDecompressed at %.1f Mbyte/s.\n\n(1 MB = 1000000 byte)\n", fastest);
+    printf("\nDecompressed at %.1f Mbyte/s.\n\n(1 MB = 1000000 byte)\n",
+           fastest);
 #endif
   }
 
@@ -508,9 +491,7 @@ int benchmark_speed(int compress_level, const char* input_file)
 }
 #endif /* SIXPACK_BENCHMARK_WIN32 */
 
-
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
   int i;
   int compress_level;
   int benchmark;
@@ -518,8 +499,7 @@ int main(int argc, char** argv)
   char* output_file;
 
   /* show help with no argument at all*/
-  if(argc == 1)
-  {
+  if (argc == 1) {
     usage();
     return 0;
   }
@@ -534,53 +514,45 @@ int main(int argc, char** argv)
   input_file = 0;
   output_file = 0;
 
-  for(i = 1; i <= argc; i++)
-  {
+  for (i = 1; i <= argc; i++) {
     char* argument = argv[i];
 
-    if(!argument)
-      continue;
+    if (!argument) continue;
 
     /* display help on usage */
-    if(!strcmp(argument, "-h") || !strcmp(argument, "--help"))
-    {
+    if (!strcmp(argument, "-h") || !strcmp(argument, "--help")) {
       usage();
       return 0;
     }
 
     /* check for version information */
-    if(!strcmp(argument, "-v") || !strcmp(argument, "--version"))
-    {
+    if (!strcmp(argument, "-v") || !strcmp(argument, "--version")) {
       printf("6pack: high-speed file compression tool\n");
-      printf("Version %s (using FastLZ %s)\n",
-        SIXPACK_VERSION_STRING, FASTLZ_VERSION_STRING);
+      printf("Version %s (using FastLZ %s)\n", SIXPACK_VERSION_STRING,
+             FASTLZ_VERSION_STRING);
       printf("Copyright (C) 2007 Ariya Hidayat (ariya@kde.org)\n");
       printf("\n");
       return 0;
     }
 
     /* test compression speed? */
-    if(!strcmp(argument, "-mem"))
-    {
+    if (!strcmp(argument, "-mem")) {
       benchmark = 1;
       continue;
     }
 
     /* compression level */
-    if(!strcmp(argument, "-1") || !strcmp(argument, "--fastest"))
-    {
+    if (!strcmp(argument, "-1") || !strcmp(argument, "--fastest")) {
       compress_level = 1;
       continue;
     }
-    if(!strcmp(argument, "-2"))
-    {
+    if (!strcmp(argument, "-2")) {
       compress_level = 2;
       continue;
     }
 
     /* unknown option */
-    if(argument[0] == '-')
-    {
+    if (argument[0] == '-') {
       printf("Error: unknown option %s\n\n", argument);
       printf("To get help on usage:\n");
       printf("  6pack --help\n\n");
@@ -588,15 +560,13 @@ int main(int argc, char** argv)
     }
 
     /* first specified file is input */
-    if(!input_file)
-    {
+    if (!input_file) {
       input_file = argument;
       continue;
     }
 
     /* next specified file is output */
-    if(!output_file)
-    {
+    if (!output_file) {
       output_file = argument;
       continue;
     }
@@ -608,16 +578,14 @@ int main(int argc, char** argv)
     return -1;
   }
 
-  if(!input_file)
-  {
+  if (!input_file) {
     printf("Error: input file is not specified.\n\n");
     printf("To get help on usage:\n");
     printf("  6pack --help\n\n");
     return -1;
   }
 
-  if(!output_file && !benchmark)
-  {
+  if (!output_file && !benchmark) {
     printf("Error: output file is not specified.\n\n");
     printf("To get help on usage:\n");
     printf("  6pack --help\n\n");
@@ -625,7 +593,7 @@ int main(int argc, char** argv)
   }
 
 #ifdef SIXPACK_BENCHMARK_WIN32
-  if(benchmark)
+  if (benchmark)
     return benchmark_speed(compress_level, input_file);
   else
 #endif
