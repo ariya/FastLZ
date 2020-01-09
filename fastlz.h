@@ -1,9 +1,6 @@
 /*
-  FastLZ - lightning-fast lossless compression library
-
-  Copyright (C) 2007 Ariya Hidayat (ariya@kde.org)
-  Copyright (C) 2006 Ariya Hidayat (ariya@kde.org)
-  Copyright (C) 2005 Ariya Hidayat (ariya@kde.org)
+  FastLZ - Byte-aligned LZ77 compression library
+  Copyright (C) 2005-2020 Ariya Hidayat <ariya.hidayat@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -27,13 +24,13 @@
 #ifndef FASTLZ_H
 #define FASTLZ_H
 
-#define FASTLZ_VERSION 0x000100
+#define FASTLZ_VERSION 0x000400
 
 #define FASTLZ_VERSION_MAJOR 0
-#define FASTLZ_VERSION_MINOR 1
+#define FASTLZ_VERSION_MINOR 4
 #define FASTLZ_VERSION_REVISION 0
 
-#define FASTLZ_VERSION_STRING "0.1.0"
+#define FASTLZ_VERSION_STRING "0.4.0"
 
 #if defined(__cplusplus)
 extern "C" {
