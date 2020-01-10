@@ -1,5 +1,16 @@
 jobs:
 
+- job: 'CodeQuality'
+  pool:
+    vmImage: 'macOS 10.13'
+  steps:
+  - script: brew install clang-format && clang-format --version
+    displayName: 'Install clang-format'
+  - script: clang-format -i --style=google *.h *.c tests/*.c
+    displayName: 'Run code formatter'
+  - script: git diff HEAD
+    displayName: 'Check if the styling guide is followed'
+
 - job: 'amd64_linux_clang'
   pool:
     vmImage: 'ubuntu-18.04'
