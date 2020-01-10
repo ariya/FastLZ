@@ -1,3 +1,6 @@
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://dev.azure.com/ariyahidayat/OpenSource/_apis/build/status/ariya.FastLZ?branchName=master)](https://dev.azure.com/ariyahidayat/OpenSource/_build/latest?definitionId=22&branchName=master)
+
 ## Overview
 
 FastLZ (MIT license) is an ANSI C/C90 implementation of [Lempel-Ziv 77 algorithm](https://en.wikipedia.org/wiki/LZ77_and_LZ78#LZ77) (LZ77) of lossless data compression. It is suitable to compress series of text/paragraphs, sequences of raw pixel data, or any other blocks of data with lots of repetition. It is not intended to be used on images, videos, and other formats of data typically already in an optimal compressed form.
@@ -21,6 +24,8 @@ FastLZ consists of only two files: `fastlz.h` and `fastlz.c`. Just add these fil
 A simple file compressor called `6pack` is included as an example on how to use FastLZ. The corresponding decompressor is `6unpack`.
 
 FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as GCC, Clang, Visual Studio and even Tiny CC. FastLZ works well on a number of architectures, from Intel/AMD (32-bit and 64-bit), ARM (32-bit and 64-bit), and MIPS.
+
+[![Build Status](https://dev.azure.com/ariyahidayat/OpenSource/_apis/build/status/ariya.FastLZ?branchName=master)](https://dev.azure.com/ariyahidayat/OpenSource/_build/latest?definitionId=22&branchName=master)
 
 The continuous integration system runs an extensive set of compression-decompression round trips on the following systems:
 
