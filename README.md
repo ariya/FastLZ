@@ -22,6 +22,100 @@ A simple file compressor called `6pack` is included as an example on how to use 
 
 FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as GCC, Clang, Visual Studio and even Tiny CC. FastLZ works well on a number of architectures, from Intel/AMD (32-bit and 64-bit), ARM (32-bit and 64-bit), and MIPS.
 
+The continuous integration system runs an extensive set of compression-decompression round trips on the following systems:
+
+
+<table>
+<tbody>
+<tr align=center>
+  <td></td>
+  <td></td>
+  <td>Clang</td>
+  <td>GCC</td>
+  <td>TinyCC</td>
+  <td>VS 2017</td>
+  <td>VS 2019</td>
+</tr>
+<tr align=center>
+  <td rowspan=3>amd64</td>
+  <td>Linux</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr align=center>
+  <td>macOS</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr align=center>
+  <td>Windows</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+</tr>
+<tr align=center>
+  <td rowspan=3>i686</td>
+  <td>Linux</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr align=center>
+  <td>macOS</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr align=center>
+  <td>Windows</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+  <td>&#x2714;</td>
+<tr>
+<tr align=center>
+  <td>arm64</td>
+  <td>Linux</td>
+  <td></td>
+  <td>&#x2714;</td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr align=center>
+  <td>armhf</td>
+  <td>Linux</td>
+  <td></td>
+  <td>&#x2714;</td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr align=center>
+  <td>mips</td>
+  <td>Linux</td>
+  <td></td>
+  <td>&#x2714;</td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+
 ## Block Format
 
 Let us assume that FastLZ compresses an array of bytes, called the _uncompressed block_, into another array of bytes, called the _compressed block_. To understand what will be stored in the compressed block, it is illustrative to demonstrate how FastLZ will _decompress_ the block to retrieve the original uncompressed block.
