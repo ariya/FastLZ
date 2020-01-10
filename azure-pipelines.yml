@@ -1,5 +1,19 @@
 jobs:
 
+- job: 'AddressSanitizer'
+  pool:
+    vmImage: 'ubuntu-18.04'
+  steps:
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
+  - script: sudo apt install -y make gcc
+    displayName: 'Install requirements'
+  - script: gcc --version
+    displayName: 'Verify tools version'
+  - script: CC=gcc CFLAGS="-g -fno-omit-frame-pointer -fsanitize=address" make roundtrip
+    workingDirectory: tests
+    displayName: 'Perform round-trip tests'
+
 - job: 'CodeQuality'
   pool:
     vmImage: 'macOS 10.13'
