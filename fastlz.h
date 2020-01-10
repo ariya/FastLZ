@@ -48,9 +48,18 @@ extern "C" {
   length (input buffer size).
 
   The input buffer and the output buffer can not overlap.
+
+  Compression level can be specified in parameter level. At the moment,
+  only level 1 and level 2 are supported.
+  Level 1 is the fastest compression and generally useful for short data.
+  Level 2 is slightly slower but it gives better compression ratio.
+
+  Note that the compressed data, regardless of the level, can always be
+  decompressed using the function fastlz_decompress below.
 */
 
-int fastlz_compress(const void* input, int length, void* output);
+int fastlz_compress_level(int level, const void* input, int length,
+                          void* output);
 
 /**
   Decompress a block of compressed data and returns the size of the
@@ -62,34 +71,25 @@ int fastlz_compress(const void* input, int length, void* output);
 
   Decompression is memory safe and guaranteed not to write the output buffer
   more than what is specified in maxout.
+
+  Note that the decompression will always work, regardless of the
+  compression level specified in fastlz_compress_level above (when
+  producing the compressed block).
  */
 
 int fastlz_decompress(const void* input, int length, void* output, int maxout);
 
 /**
-  Compress a block of data in the input buffer and returns the size of
-  compressed block. The size of input buffer is specified by length. The
-  minimum input buffer size is 16.
+  DEPRECATED.
 
-  The output buffer must be at least 5% larger than the input buffer
-  and can not be smaller than 66 bytes.
+  This is similar to fastlz_compress_level above, but with the level
+  automatically chosen.
 
-  If the input is not compressible, the return value might be larger than
-  length (input buffer size).
-
-  The input buffer and the output buffer can not overlap.
-
-  Compression level can be specified in parameter level. At the moment,
-  only level 1 and level 2 are supported.
-  Level 1 is the fastest compression and generally useful for short data.
-  Level 2 is slightly slower but it gives better compression ratio.
-
-  Note that the compressed data, regardless of the level, can always be
-  decompressed using the function fastlz_decompress above.
+  This function is deprecated and it will be completely removed in some future
+  version.
 */
 
-int fastlz_compress_level(int level, const void* input, int length,
-                          void* output);
+int fastlz_compress(const void* input, int length, void* output);
 
 #if defined(__cplusplus)
 }
