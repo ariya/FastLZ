@@ -4,8 +4,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y make clang
     displayName: 'Install requirements'
   - script: clang --version
@@ -18,8 +18,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y make gcc
     displayName: 'Install requirements'
   - script: gcc --version
@@ -32,8 +32,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y make tcc
     displayName: 'Install requirements'
   - script: tcc -v
@@ -46,8 +46,8 @@ jobs:
   pool:
     vmImage: 'macOS 10.13'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: cc --version
     displayName: 'Verify tools version'
   - script: make roundtrip
@@ -58,8 +58,8 @@ jobs:
   pool:
     vmImage: 'macOS 10.13'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: brew install gcc
     displayName: 'Install requirements'
   - script: gcc --version
@@ -74,8 +74,8 @@ jobs:
   variables:
     CC: 'gcc'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: choco install mingw --version 8.1.0
     displayName: 'install MinGW-w64'
   - script: gcc --version
@@ -88,8 +88,8 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: choco install make
     displayName: 'Install requirements'
   - task: BatchScript@1
@@ -108,8 +108,8 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: choco install make
     displayName: 'Install requirements'
   - task: BatchScript@1
@@ -128,8 +128,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: sudo apt-get -y -qq update
     displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
@@ -152,8 +152,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: sudo apt-get -y -qq update
     displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
@@ -176,8 +176,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: sudo apt-get -y -qq update
     displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
@@ -200,8 +200,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: sudo apt-get -y -qq update
     displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
@@ -224,8 +224,8 @@ jobs:
   pool:
     vmImage: 'macOS 10.13'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: cc --version
     displayName: 'Verify tools version'
   - script: make roundtrip CFLAGS='-m32' LDFLAGS='-m32'
@@ -238,8 +238,8 @@ jobs:
   pool:
     vmImage: 'macOS 10.13'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: brew install gcc
     displayName: 'Install requirements'
   - script: gcc --version
@@ -254,8 +254,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - checkout: self
-    submodules: true
+  - script: git clone https://github.com/ariya/compression-corpus.git
+    displayName: 'Retrieve test compression corpus'
   - script: sudo apt-get -y -qq update
     displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
