@@ -21,6 +21,8 @@ For other implementations of byte-aligned LZ77, take a look at [LZ4](https://lz4
 
 FastLZ consists of only two files: `fastlz.h` and `fastlz.c`. Just add these files to your project in order to use FastLZ. For the detailed information on the API to perform compression and decompression, see `fastlz.h`.
 
+For [Vcpkg](https://github.com/microsoft/vcpkg) users, FastLZ is [already available](https://github.com/microsoft/vcpkg): `vcpkg install fastlz`.
+
 A simple file compressor called `6pack` is included as an example on how to use FastLZ. The corresponding decompressor is `6unpack`.
 
 FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as GCC, Clang, Visual Studio and even Tiny CC. FastLZ works well on a number of architectures, from Intel/AMD (32-bit and 64-bit), ARM (32-bit and 64-bit), and MIPS.
