@@ -17,7 +17,15 @@ FastLZ is used by many software products, from a number of games (such as [Death
 
 For other implementations of byte-aligned LZ77, take a look at [LZ4](https://lz4.github.io/lz4/), [Snappy](http://google.github.io/snappy/), [Density](https://github.com/centaurean/density), [LZO](http://www.oberhumer.com/opensource/lzo/), [LZF](http://oldhome.schmorp.de/marc/liblzf.html), [LZJB](https://en.wikipedia.org/wiki/LZJB), [LZRW](http://www.ross.net/compression/lzrw1.html), etc.
 
-## Implementation
+## Usage
+
+FastLZ can be used directly in any C/C++ applications. For other programming languages/environments, use the corresponding binding:
+
+* [Rust](https://crates.io/crates/fastlz), available on Crates: `cargo install fastlz`
+* [Python](https://pypi.org/project/fastlz/), available on PyPi: `pip install fastlz`
+* [JavaScript](https://www.npmjs.com/package/fastlz), available on npm: `npm install fastlz`
+* [Ruby](https://rubygems.org/gems/fastlz), available on Rubygems: `gem install fastlz`
+* Lua via [github.com/oneoo/lua-fastlz](https://github.com/oneoo/lua-fastlz)
 
 FastLZ consists of only two files: `fastlz.h` and `fastlz.c`. Just add these files to your project in order to use FastLZ. For the detailed information on the API to perform compression and decompression, see `fastlz.h`.
 
