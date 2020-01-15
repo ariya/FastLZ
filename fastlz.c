@@ -33,9 +33,9 @@
 /*
  * Give hints to the compiler for branch prediction optimization.
  */
-#if defined(__GNUC__) && (__GNUC__ > 2)
-#define FASTLZ_LIKELY(c) (__builtin_expect((c), 1))
-#define FASTLZ_UNLIKELY(c) (__builtin_expect((c), 0))
+#if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 2))
+#define FASTLZ_LIKELY(c) (__builtin_expect(!!(c), 1))
+#define FASTLZ_UNLIKELY(c) (__builtin_expect(!!(c), 0))
 #else
 #define FASTLZ_LIKELY(c) (c)
 #define FASTLZ_UNLIKELY(c) (c)
