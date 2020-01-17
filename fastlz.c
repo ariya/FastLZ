@@ -380,7 +380,7 @@ int fastlz2_compress(const void* input, int length, void* output) {
     const uint8_t* anchor = ip;
 
     /* check for a run */
-    if (ip[0] == ip[-1] && FASTLZ_READU16(ip - 1) == FASTLZ_READU16(ip + 1)) {
+    if (ip[0] == ip[-1] && ip[0] == ip[1] && ip[1] == ip[2]) {
       distance = 1;
       ip += 3;
       ref = anchor - 1 + 3;
