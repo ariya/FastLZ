@@ -90,7 +90,6 @@ int fastlz1_compress(const void* input, int length, void* output) {
   uint8_t* op = (uint8_t*)output;
 
   const uint8_t* htab[HASH_SIZE];
-  const uint8_t** hslot;
   uint32_t hval;
 
   uint32_t copy;
@@ -108,7 +107,7 @@ int fastlz1_compress(const void* input, int length, void* output) {
   }
 
   /* initializes hash table */
-  for (hslot = htab; hslot < htab + HASH_SIZE; hslot++) *hslot = ip;
+  for (hval = 0; hval < HASH_SIZE; ++hval) htab[hval] = ip;
 
   /* we start with literal copy */
   copy = 2;
@@ -129,14 +128,13 @@ int fastlz1_compress(const void* input, int length, void* output) {
 
     /* find potential match */
     HASH_FUNCTION(hval, ip);
-    hslot = htab + hval;
     ref = htab[hval];
+
+    /* update hash table */
+    htab[hval] = anchor;
 
     /* calculate distance to the match */
     distance = anchor - ref;
-
-    /* update hash table */
-    *hslot = anchor;
 
     /* is this a match? check the first 3 bytes */
     if (distance == 0 || (distance >= MAX_L1_DISTANCE) || *ref++ != *ip++ ||
@@ -342,7 +340,6 @@ int fastlz2_compress(const void* input, int length, void* output) {
   uint8_t* op = (uint8_t*)output;
 
   const uint8_t* htab[HASH_SIZE];
-  const uint8_t** hslot;
   uint32_t hval;
 
   uint32_t copy;
@@ -360,7 +357,7 @@ int fastlz2_compress(const void* input, int length, void* output) {
   }
 
   /* initializes hash table */
-  for (hslot = htab; hslot < htab + HASH_SIZE; hslot++) *hslot = ip;
+  for (hval = 0; hval < HASH_SIZE; ++hval) htab[hval] = ip;
 
   /* we start with literal copy */
   copy = 2;
@@ -389,14 +386,13 @@ int fastlz2_compress(const void* input, int length, void* output) {
 
     /* find potential match */
     HASH_FUNCTION(hval, ip);
-    hslot = htab + hval;
     ref = htab[hval];
+
+    /* update hash table */
+    htab[hval] = anchor;
 
     /* calculate distance to the match */
     distance = anchor - ref;
-
-    /* update hash table */
-    *hslot = anchor;
 
     /* is this a match? check the first 3 bytes */
     if (distance == 0 || (distance >= MAX_FARDISTANCE) || *ref++ != *ip++ ||
