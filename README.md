@@ -206,39 +206,47 @@ _Example_:  If the compressed block is a 4-byte array of `[0x01, 0x44, 0x45, 0xE
 
 #### Decompressor Reference Implementation
 
-The following 30-line C function implements a fully-functional decompressor for the above block format. Note that it is intended to be educational, e.g. no bound check is implemented, and therefore it is absolutely **unsafe** for production.
+The following 40-line C function implements a fully-functional decompressor for the above block format. Note that it is intended to be educational, e.g. no bound check is implemented, and therefore it is absolutely **unsafe** for production.
 
 ```c
 void fastlz_level1_decompress(const uint8_t* input, int length, uint8_t* output) {
-  const uint8_t* limit = input + length;
-  while (input < limit) {
-    const uint8_t* opcode = input;
-    int type = opcode[0] >> 5;
+  int src = 0;
+  int dest = 0;
+  while (src < length) {
+    int type = input[src] >> 5;
     if (type == 0) {
       /* literal run */
-      int run = 1 + opcode[0];
-      input = input + 1 + run;
-      const uint8_t* literals = opcode + 1;
-      while (run--) {
-        *output++ = *literals++;
+      int run = 1 + input[src];
+      src = src + 1;
+      while (run > 0) {
+        output[dest] = input[src];
+        src = src + 1;
+        dest = dest + 1;
+        run = run - 1;
       }
     } else if (type < 7) {
       /* short match */
-      int ofs = 256 * (opcode[0] & 31) + opcode[1];
-      int len = 2 + (opcode[0] >> 5);
-      input = input + 2;
-      const uint8_t* ref = output - 1 - ofs;
-      while (len--) {
-        *output++ = *ref++;
+      int ofs = 256 * (input[src] & 31) + input[src + 1];
+      int len = 2 + (input[src] >> 5);
+      src = src + 2;
+      int ref = dest - ofs - 1;
+      while (len > 0) {
+        output[dest] = output[ref];
+        ref = ref + 1;
+        dest = dest + 1;
+        len = len - 1;
       }
     } else {
       /* long match */
-      int ofs = 256 * (opcode[0] & 31) + opcode[2];
-      int len = 9 + opcode[1];
-      input = input + 3;
-      const uint8_t* ref = output - 1 - ofs;
-      while (len--) {
-        *output++ = *ref++;
+      int ofs = 256 * (input[src] & 31) + input[src + 2];
+      int len = 9 + input[src + 1];
+      src = src + 3;
+      int ref = dest - ofs - 1;
+      while (len > 0) {
+        output[dest] = output[ref];
+        ref = ref + 1;
+        dest = dest + 1;
+        len = len - 1;
       }
     }
   }
