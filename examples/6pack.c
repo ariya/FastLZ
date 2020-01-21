@@ -1,7 +1,6 @@
 /*
   6PACK - file compressor using FastLZ (lightning-fast compression library)
-
-  Copyright (C) 2007 Ariya Hidayat (ariya@kde.org)
+  Copyright (C) 2007-2020 Ariya Hidayat <ariya.hidayat@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -41,9 +40,6 @@
 
 #if defined(WIN32) || defined(__NT__) || defined(_WIN32) || defined(__WIN32__)
 #define PATH_SEPARATOR '\\'
-#if defined(__BORLANDC__) || defined(_MSC_VER)
-#define inline __inline
-#endif
 #endif
 
 #ifndef PATH_SEPARATOR
@@ -64,8 +60,8 @@ static unsigned char sixpack_magic[8] = {137, '6', 'P', 'K', 13, 10, 26, 10};
 #define BLOCK_SIZE (2 * 64 * 1024)
 
 /* prototypes */
-static inline unsigned long update_adler32(unsigned long checksum,
-                                           const void* buf, int len);
+static unsigned long update_adler32(unsigned long checksum, const void* buf,
+                                    int len);
 void usage(void);
 int detect_magic(FILE* f);
 void write_magic(FILE* f);
@@ -80,8 +76,8 @@ int pack_file(int compress_level, const char* input_file,
 
 /* for Adler-32 checksum algorithm, see RFC 1950 Section 8.2 */
 #define ADLER32_BASE 65521
-static inline unsigned long update_adler32(unsigned long checksum,
-                                           const void* buf, int len) {
+static unsigned long update_adler32(unsigned long checksum, const void* buf,
+                                    int len) {
   const unsigned char* ptr = (const unsigned char*)buf;
   unsigned long s1 = checksum & 0xffff;
   unsigned long s2 = (checksum >> 16) & 0xffff;
@@ -122,7 +118,7 @@ static inline unsigned long update_adler32(unsigned long checksum,
 
 void usage(void) {
   printf("6pack: high-speed file compression tool\n");
-  printf("Copyright (C) 2007 Ariya Hidayat (ariya@kde.org)\n");
+  printf("Copyright (C) Ariya Hidayat\n");
   printf("\n");
   printf("Usage: 6pack [options]  input-file  output-file\n");
   printf("\n");
@@ -530,7 +526,7 @@ int main(int argc, char** argv) {
       printf("6pack: high-speed file compression tool\n");
       printf("Version %s (using FastLZ %s)\n", SIXPACK_VERSION_STRING,
              FASTLZ_VERSION_STRING);
-      printf("Copyright (C) 2007 Ariya Hidayat (ariya@kde.org)\n");
+      printf("Copyright (C) Ariya Hidayat\n");
       printf("\n");
       return 0;
     }

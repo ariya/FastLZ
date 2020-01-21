@@ -20,7 +20,7 @@ jobs:
   steps:
   - script: brew install clang-format && clang-format --version
     displayName: 'Install clang-format'
-  - script: clang-format -i --style=google *.h *.c tests/*.c
+  - script: clang-format -i --style=google *.h *.c tests/*.c examples/*.c
     displayName: 'Run code formatter'
   - script: git diff HEAD
     displayName: 'Check if the styling guide is followed'
@@ -38,6 +38,16 @@ jobs:
   - script: CC=clang make roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
+  - script: CC=clang make
+    workingDirectory: examples
+    displayName: 'Build examples: 6pack and 6unpack'
+  - script: |
+      ./6pack -v
+      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6unpack -v
+      ./6unpack archive.6pk
+    workingDirectory: examples
+    displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'amd64_linux_gcc'
   pool:
@@ -52,6 +62,16 @@ jobs:
   - script: CC=gcc make roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
+  - script: CC=gcc make
+    workingDirectory: examples
+    displayName: 'Build examples: 6pack and 6unpack'
+  - script: |
+      ./6pack -v
+      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6unpack -v
+      ./6unpack archive.6pk
+    workingDirectory: examples
+    displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'amd64_linux_tcc'
   pool:
@@ -78,6 +98,16 @@ jobs:
   - script: make roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
+  - script: make
+    workingDirectory: examples
+    displayName: 'Build examples: 6pack and 6unpack'
+  - script: |
+      ./6pack -v
+      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6unpack -v
+      ./6unpack archive.6pk
+    workingDirectory: examples
+    displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'amd64_macos_gcc'
   pool:
@@ -92,6 +122,16 @@ jobs:
   - script: CC=gcc make roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
+  - script: CC=gcc make
+    workingDirectory: examples
+    displayName: 'Build examples: 6pack and 6unpack'
+  - script: |
+      ./6pack -v
+      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6unpack -v
+      ./6unpack archive.6pk
+    workingDirectory: examples
+    displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'amd64_windows_gcc'
   pool:
@@ -108,6 +148,16 @@ jobs:
   - script: make roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
+  - script: make
+    workingDirectory: examples
+    displayName: 'Build examples: 6pack and 6unpack'
+  - script: |
+      .6pack -v
+      6pack ../compression-corpus/silesia/webster archive.6pk
+      6unpack -v
+      6unpack archive.6pk
+    workingDirectory: examples
+    displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'amd64_windows_vs2017'
   pool:
@@ -128,6 +178,16 @@ jobs:
   - script: make -f Makefile.win roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
+  - script: make -f Makefile.win
+    workingDirectory: examples
+    displayName: 'Build examples: 6pack and 6unpack'
+  - script: |
+      6pack -v
+      6pack ..\compression-corpus\silesia/webster archive.6pk
+      6unpack -v
+      6unpack archive.6pk
+    workingDirectory: examples
+    displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'amd64_windows_vs2019'
   pool:
@@ -148,6 +208,16 @@ jobs:
   - script: make -f Makefile.win roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
+  - script: make -f Makefile.win
+    workingDirectory: examples
+    displayName: 'Build examples: 6pack and 6unpack'
+  - script: |
+      6pack -v
+      6pack ..\compression-corpus\silesia/webster archive.6pk
+      6unpack -v
+      6unpack archive.6pk
+    workingDirectory: examples
+    displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'arm64_linux_gcc'
   pool:
@@ -172,6 +242,15 @@ jobs:
       file ./test_roundtrip
       qemu-aarch64 ./test_roundtrip
     displayName: 'Perform round-trip tests'
+  - script: |
+      ./dockcross/dockcross-linux-arm64 bash -c 'cd examples && $CC -o 6pack -Wall -std=c90 -static  -I.. 6pack.c ../fastlz.c'
+      ./dockcross/dockcross-linux-arm64 bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
+      cd examples
+      qemu-aarch64 ./6pack -v
+      qemu-aarch64 ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-aarch64 ./6unpack -v
+      qemu-aarch64 ./6unpack archive.6pk
+    displayName: 'Build and run examples: 6pack and 6unpack'
 
 - job: 'armhf_linux_gcc'
   pool:
@@ -196,6 +275,15 @@ jobs:
       file ./test_roundtrip
       qemu-arm ./test_roundtrip
     displayName: 'Perform round-trip tests'
+  - script: |
+      ./dockcross/dockcross-linux-armv7 bash -c 'cd examples && $CC -o 6pack -Wall -std=c90 -static  -I.. 6pack.c ../fastlz.c'
+      ./dockcross/dockcross-linux-armv7 bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
+      cd examples
+      qemu-arm ./6pack -v
+      qemu-arm ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-arm ./6unpack -v
+      qemu-arm ./6unpack archive.6pk
+    displayName: 'Build and run examples: 6pack and 6unpack'
 
 - job: 'i686_linux_clang'
   pool:
@@ -220,6 +308,15 @@ jobs:
       file ./test_roundtrip
       qemu-i386 ./test_roundtrip
     displayName: 'Perform round-trip tests'
+  - script: |
+      ./dockcross/dockcross-linux-x86 bash -c 'sudo apt install -y clang && cd examples && clang -o 6pack -Wall -m32 -std=c90 -static  -I.. 6pack.c ../fastlz.c'
+      ./dockcross/dockcross-linux-x86 bash -c 'sudo apt install -y clang && cd examples && clang -o 6unpack -Wall -m32 -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
+      cd examples
+      qemu-i386 ./6pack -v
+      qemu-i386 ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-i386 ./6unpack -v
+      qemu-i386 ./6unpack archive.6pk
+    displayName: 'Build and run examples: 6pack and 6unpack'
 
 - job: 'i686_linux_gcc'
   pool:
@@ -244,6 +341,15 @@ jobs:
       file ./test_roundtrip
       qemu-i386 ./test_roundtrip
     displayName: 'Perform round-trip tests'
+  - script: |
+      ./dockcross/dockcross-linux-x86 bash -c 'cd examples && $CC -o 6pack -Wall -std=c90 -static  -I.. 6pack.c ../fastlz.c'
+      ./dockcross/dockcross-linux-x86 bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
+      cd examples
+      qemu-i386 ./6pack -v
+      qemu-i386 ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-i386 ./6unpack -v
+      qemu-i386 ./6unpack archive.6pk
+    displayName: 'Build and run examples: 6pack and 6unpack'
 
 - job: 'i686_macos_clang'
   pool:
@@ -258,6 +364,18 @@ jobs:
     displayName: 'Perform round-trip tests'
   - script: file tests/test_roundtrip
     displayName: 'file tests/test_roundtrip'
+  - script: make CFLAGS='-m32' LDFLAGS='-m32'
+    workingDirectory: examples
+    displayName: 'Build examples: 6pack and 6unpack'
+  - script: |
+      file ./6pack
+      ./6pack -v
+      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      file ./6unpack
+      ./6unpack -v
+      ./6unpack archive.6pk
+    workingDirectory: examples
+    displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'i686_macos_gcc'
   pool:
@@ -274,6 +392,18 @@ jobs:
     displayName: 'Perform round-trip tests'
   - script: file tests/test_roundtrip
     displayName: 'file tests/test_roundtrip'
+  - script: CC=gcc make CFLAGS='-m32' LDFLAGS='-m32'
+    workingDirectory: examples
+    displayName: 'Build examples: 6pack and 6unpack'
+  - script: |
+      file ./6pack
+      ./6pack -v
+      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      file ./6unpack
+      ./6unpack -v
+      ./6unpack archive.6pk
+    workingDirectory: examples
+    displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'mips_linux_gcc'
   pool:
@@ -298,3 +428,12 @@ jobs:
       file ./test_roundtrip
       qemu-mips ./test_roundtrip
     displayName: 'Perform round-trip tests'
+  - script: |
+      ./dockcross/dockcross-linux-mips bash -c 'cd examples && $CC -o 6pack -Wall -std=c90 -static  -I.. 6pack.c ../fastlz.c'
+      ./dockcross/dockcross-linux-mips bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
+      cd examples
+      qemu-mips ./6pack -v
+      qemu-mips ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-mips ./6unpack -v
+      qemu-mips ./6unpack archive.6pk
+    displayName: 'Build and run examples: 6pack and 6unpack'

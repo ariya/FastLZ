@@ -1,7 +1,6 @@
 /*
   6PACK - file compressor using FastLZ (lightning-fast compression library)
-
-  Copyright (C) 2007 Ariya Hidayat (ariya@kde.org)
+  Copyright (C) 2007-2020 Ariya Hidayat <ariya.hidayat@gmail.com>
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -33,32 +32,26 @@
 
 #include "fastlz.h"
 
-#if defined(WIN32) || defined(__NT__) || defined(_WIN32) || defined(__WIN32__)
-#if defined(__BORLANDC__) || defined(_MSC_VER)
-#define inline __inline
-#endif
-#endif
-
 /* magic identifier for 6pack file */
 static unsigned char sixpack_magic[8] = {137, '6', 'P', 'K', 13, 10, 26, 10};
 
 #define BLOCK_SIZE 65536
 
 /* prototypes */
-static inline unsigned long update_adler32(unsigned long checksum,
-                                           const void* buf, int len);
+static unsigned long update_adler32(unsigned long checksum, const void* buf,
+                                    int len);
 void usage(void);
 int detect_magic(FILE* f);
-static inline unsigned long readU16(const unsigned char* ptr);
-static inline unsigned long readU32(const unsigned char* ptr);
+static unsigned long readU16(const unsigned char* ptr);
+static unsigned long readU32(const unsigned char* ptr);
 void read_chunk_header(FILE* f, int* id, int* options, unsigned long* size,
                        unsigned long* checksum, unsigned long* extra);
 int unpack_file(const char* archive_file);
 
 /* for Adler-32 checksum algorithm, see RFC 1950 Section 8.2 */
 #define ADLER32_BASE 65521
-static inline unsigned long update_adler32(unsigned long checksum,
-                                           const void* buf, int len) {
+static unsigned long update_adler32(unsigned long checksum, const void* buf,
+                                    int len) {
   const unsigned char* ptr = (const unsigned char*)buf;
   unsigned long s1 = checksum & 0xffff;
   unsigned long s2 = (checksum >> 16) & 0xffff;
@@ -99,7 +92,7 @@ static inline unsigned long update_adler32(unsigned long checksum,
 
 void usage(void) {
   printf("6unpack: uncompress 6pack archive\n");
-  printf("Copyright (C) 2007 Ariya Hidayat (ariya@kde.org)\n");
+  printf("Copyright (C) Ariya Hidayat\n");
   printf("\n");
   printf("Usage: 6unpack archive-file\n");
   printf("\n");
@@ -123,11 +116,11 @@ int detect_magic(FILE* f) {
   return -1;
 }
 
-static inline unsigned long readU16(const unsigned char* ptr) {
+static unsigned long readU16(const unsigned char* ptr) {
   return ptr[0] + (ptr[1] << 8);
 }
 
-static inline unsigned long readU32(const unsigned char* ptr) {
+static unsigned long readU32(const unsigned char* ptr) {
   return ptr[0] + (ptr[1] << 8) + (ptr[2] << 16) + (ptr[3] << 24);
 }
 
@@ -423,7 +416,7 @@ int main(int argc, char** argv) {
         printf("6unpack: high-speed file compression tool\n");
         printf("Version %s (using FastLZ %s)\n", SIXPACK_VERSION_STRING,
                FASTLZ_VERSION_STRING);
-        printf("Copyright (C) 2007 Ariya Hidayat (ariya@kde.org)\n");
+        printf("Copyright (C) Ariya Hidayat\n");
         printf("\n");
         return 0;
       }
