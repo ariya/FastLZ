@@ -115,14 +115,14 @@ jobs:
   steps:
   - script: git clone https://github.com/ariya/compression-corpus.git
     displayName: 'Retrieve test compression corpus'
-  - script: brew install gcc
+  - script: brew install gcc@9
     displayName: 'Install requirements'
-  - script: gcc --version
+  - script: gcc-9 --version
     displayName: 'Verify tools version'
-  - script: CC=gcc make roundtrip
+  - script: CC=gcc-9 make roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
-  - script: CC=gcc make
+  - script: CC=gcc-9 make
     workingDirectory: examples
     displayName: 'Build examples: 6pack and 6unpack'
   - script: |
@@ -383,16 +383,16 @@ jobs:
   steps:
   - script: git clone https://github.com/ariya/compression-corpus.git
     displayName: 'Retrieve test compression corpus'
-  - script: brew install gcc
+  - script: brew install gcc@9
     displayName: 'Install requirements'
-  - script: gcc --version
+  - script: gcc-9 --version
     displayName: 'Verify tools version'
-  - script: CC=gcc make roundtrip CFLAGS='-m32' LDFLAGS='-m32'
+  - script: CC=gcc-9 make roundtrip CFLAGS='-m32' LDFLAGS='-m32'
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
   - script: file tests/test_roundtrip
     displayName: 'file tests/test_roundtrip'
-  - script: CC=gcc make CFLAGS='-m32' LDFLAGS='-m32'
+  - script: CC=gcc-9 make CFLAGS='-m32' LDFLAGS='-m32'
     workingDirectory: examples
     displayName: 'Build examples: 6pack and 6unpack'
   - script: |
