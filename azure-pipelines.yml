@@ -20,6 +20,9 @@ jobs:
   - script: CC=gcc CFLAGS="-g -fno-omit-frame-pointer -fsanitize=address" make roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'
+  - script: CC=gcc CFLAGS="-g -fno-omit-frame-pointer -fsanitize=address -DFASTLZ_USE_MEMMOVE=0" make roundtrip
+    workingDirectory: tests
+    displayName: 'Perform round-trip tests with disabling memmove'
 
 - job: 'CodeQuality'
   pool:

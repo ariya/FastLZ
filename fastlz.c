@@ -45,6 +45,15 @@
 #define FASTLZ_UNLIKELY(c) (c)
 #endif
 
+#if defined(FASTLZ_SAFE)
+#define FASTLZ_BOUND_CHECK(cond) \
+  if (FASTLZ_UNLIKELY(!(cond))) return 0;
+#else
+#define FASTLZ_BOUND_CHECK(cond) \
+  do {                           \
+  } while (0)
+#endif
+
 #define MAX_COPY 32
 #define MAX_LEN 264 /* 256 + 8 */
 #define MAX_L1_DISTANCE 8192
@@ -224,6 +233,50 @@ int fastlz1_compress(const void* input, int length, void* output) {
   return op - (uint8_t*)output;
 }
 
+#if defined(FASTLZ_USE_MEMMOVE) && (FASTLZ_USE_MEMMOVE == 0)
+
+static void fastlz_memmove(uint8_t* dest, const uint8_t* src, uint32_t count) {
+  do {
+    *dest++ = *src++;
+  } while (--count);
+}
+
+static void fastlz_memcpy(uint8_t* dest, const uint8_t* src, uint32_t count) {
+  return fastlz_memmove(dest, src, count);
+}
+
+#else
+
+#include <string.h>
+
+static void fastlz_memmove(uint8_t* dest, const uint8_t* src, uint32_t count) {
+  if ((count > 4) && (dest >= src + count)) {
+    memmove(dest, src, count);
+  } else {
+    switch (count) {
+      default:
+        do {
+          *dest++ = *src++;
+        } while (--count);
+        break;
+      case 3:
+        *dest++ = *src++;
+      case 2:
+        *dest++ = *src++;
+      case 1:
+        *dest++ = *src++;
+      case 0:
+        break;
+    }
+  }
+}
+
+static void fastlz_memcpy(uint8_t* dest, const uint8_t* src, uint32_t count) {
+  memcpy(dest, src, count);
+}
+
+#endif
+
 int fastlz1_decompress(const void* input, int length, void* output,
                        int maxout) {
   const uint8_t* ip = (const uint8_t*)input;
@@ -231,59 +284,31 @@ int fastlz1_decompress(const void* input, int length, void* output,
   uint8_t* op = (uint8_t*)output;
   uint8_t* op_limit = op + maxout;
   uint32_t ctrl = (*ip++) & 31;
-  int loop = 1;
 
-  do {
-    const uint8_t* ref = op;
-    uint32_t len = ctrl >> 5;
-    uint32_t ofs = (ctrl & 31) << 8;
-
+  while (1) {
     if (ctrl >= 32) {
-      len--;
-      ref -= ofs;
+      uint32_t len = (ctrl >> 5) - 1;
+      uint32_t ofs = (ctrl & 31) << 8;
+      const uint8_t* ref = op - ofs - 1;
       if (len == 7 - 1) len += *ip++;
       ref -= *ip++;
-
-#ifdef FASTLZ_SAFE
-      if (FASTLZ_UNLIKELY(op + len + 3 > op_limit)) return 0;
-
-      if (FASTLZ_UNLIKELY(ref - 1 < (uint8_t*)output)) return 0;
-#endif
-
-      if (FASTLZ_LIKELY(ip < ip_limit))
-        ctrl = *ip++;
-      else
-        loop = 0;
-
-      if (ref == op) {
-        /* optimize copy for a run */
-        uint8_t b = ref[-1];
-        *op++ = b;
-        *op++ = b;
-        *op++ = b;
-        for (; len; --len) *op++ = b;
-      } else {
-        /* copy from reference */
-        ref--;
-        *op++ = *ref++;
-        *op++ = *ref++;
-        *op++ = *ref++;
-        for (; len; --len) *op++ = *ref++;
-      }
+      len += 3;
+      FASTLZ_BOUND_CHECK(op + len <= op_limit);
+      FASTLZ_BOUND_CHECK(ref >= (uint8_t*)output);
+      fastlz_memmove(op, ref, len);
+      op += len;
     } else {
       ctrl++;
-#ifdef FASTLZ_SAFE
-      if (FASTLZ_UNLIKELY(op + ctrl > op_limit)) return 0;
-      if (FASTLZ_UNLIKELY(ip + ctrl > ip_limit)) return 0;
-#endif
-
-      *op++ = *ip++;
-      for (--ctrl; ctrl; ctrl--) *op++ = *ip++;
-
-      loop = FASTLZ_LIKELY(ip < ip_limit);
-      if (loop) ctrl = *ip++;
+      FASTLZ_BOUND_CHECK(op + ctrl <= op_limit);
+      FASTLZ_BOUND_CHECK(ip + ctrl <= ip_limit);
+      fastlz_memcpy(op, ip, ctrl);
+      ip += ctrl;
+      op += ctrl;
     }
-  } while (FASTLZ_LIKELY(loop));
+
+    if (FASTLZ_UNLIKELY(ip >= ip_limit)) break;
+    ctrl = *ip++;
+  }
 
   return op - (uint8_t*)output;
 }
@@ -487,72 +512,46 @@ int fastlz2_decompress(const void* input, int length, void* output,
   uint8_t* op = (uint8_t*)output;
   uint8_t* op_limit = op + maxout;
   uint32_t ctrl = (*ip++) & 31;
-  int loop = 1;
 
-  do {
-    const uint8_t* ref = op;
-    uint32_t len = ctrl >> 5;
-    uint32_t ofs = (ctrl & 31) << 8;
-
+  while (1) {
     if (ctrl >= 32) {
+      uint32_t len = (ctrl >> 5) - 1;
+      uint32_t ofs = (ctrl & 31) << 8;
+      const uint8_t* ref = op - ofs - 1;
+
       uint8_t code;
-      len--;
-      ref -= ofs;
       if (len == 7 - 1) do {
           code = *ip++;
           len += code;
         } while (code == 255);
       code = *ip++;
       ref -= code;
+      len += 3;
 
       /* match from 16-bit distance */
       if (FASTLZ_UNLIKELY(code == 255))
         if (FASTLZ_LIKELY(ofs == (31 << 8))) {
           ofs = (*ip++) << 8;
           ofs += *ip++;
-          ref = op - ofs - MAX_L2_DISTANCE;
+          ref = op - ofs - MAX_L2_DISTANCE - 1;
         }
 
-#ifdef FASTLZ_SAFE
-      if (FASTLZ_UNLIKELY(op + len + 3 > op_limit)) return 0;
-
-      if (FASTLZ_UNLIKELY(ref - 1 < (uint8_t*)output)) return 0;
-#endif
-
-      if (FASTLZ_LIKELY(ip < ip_limit))
-        ctrl = *ip++;
-      else
-        loop = 0;
-
-      if (ref == op) {
-        /* optimize copy for a run */
-        uint8_t b = ref[-1];
-        *op++ = b;
-        *op++ = b;
-        *op++ = b;
-        for (; len; --len) *op++ = b;
-      } else {
-        /* copy from reference */
-        ref--;
-        *op++ = *ref++;
-        *op++ = *ref++;
-        *op++ = *ref++;
-        for (; len; --len) *op++ = *ref++;
-      }
+      FASTLZ_BOUND_CHECK(op + len <= op_limit);
+      FASTLZ_BOUND_CHECK(ref >= (uint8_t*)output);
+      fastlz_memmove(op, ref, len);
+      op += len;
     } else {
       ctrl++;
-#ifdef FASTLZ_SAFE
-      if (FASTLZ_UNLIKELY(op + ctrl > op_limit)) return 0;
-      if (FASTLZ_UNLIKELY(ip + ctrl > ip_limit)) return 0;
-#endif
-
-      *op++ = *ip++;
-      for (--ctrl; ctrl; ctrl--) *op++ = *ip++;
-
-      loop = FASTLZ_LIKELY(ip < ip_limit);
-      if (loop) ctrl = *ip++;
+      FASTLZ_BOUND_CHECK(op + ctrl <= op_limit);
+      FASTLZ_BOUND_CHECK(ip + ctrl <= ip_limit);
+      fastlz_memcpy(op, ip, ctrl);
+      ip += ctrl;
+      op += ctrl;
     }
-  } while (FASTLZ_LIKELY(loop));
+
+    if (FASTLZ_UNLIKELY(ip >= ip_limit)) break;
+    ctrl = *ip++;
+  }
 
   return op - (uint8_t*)output;
 }
