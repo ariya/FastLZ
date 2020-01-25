@@ -165,8 +165,6 @@ jobs:
   steps:
   - script: git clone https://github.com/ariya/compression-corpus.git
     displayName: 'Retrieve test compression corpus'
-  - script: choco install make
-    displayName: 'Install requirements'
   - task: BatchScript@1
     inputs:
       filename: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\VsDevCmd.bat"
@@ -195,8 +193,6 @@ jobs:
   steps:
   - script: git clone https://github.com/ariya/compression-corpus.git
     displayName: 'Retrieve test compression corpus'
-  - script: choco install make
-    displayName: 'Install requirements'
   - task: BatchScript@1
     inputs:
       filename: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\Common7\\Tools\\VsDevCmd.bat"
