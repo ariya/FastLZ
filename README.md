@@ -154,8 +154,8 @@ Each instruction starts with a 1-byte opcode, 2-byte opcode, or 3-byte opcode.
 | Instruction type | Opcode[0] | Opcode[1] | Opcode[2]
 |-----------|------------------|--------------------|--|
 | Literal run | `000`, L&#x2085;-L&#x2080; | -|- |
-| Short match | M&#x2082;-M&#x2080;, R&#x2081;&#x2081;-R&#x2088; | R&#x2087;-R&#x2080; | - |
-| Long match | `111`, R&#x2081;&#x2081;-R&#x2088; | M&#x2087;-R&#x2080; | R&#x2087;-R&#x2080; |
+| Short match | M&#x2082;-M&#x2080;, R&#x2081;&#x2082;-R&#x2088; | R&#x2087;-R&#x2080; | - |
+| Long match | `111`, R&#x2081;&#x2082;-R&#x2088; | M&#x2087;-R&#x2080; | R&#x2087;-R&#x2080; |
 
 Note that the _very first_ instruction in a compressed block is always a literal run.
 
@@ -192,7 +192,7 @@ _Example 2_: If the compressed block is a 4-byte array of `[0x00, 0x61, 0x40, 0x
 
 The value of `opcode[1]`, _M_, determines the **match length**. The value of 0 indicates a 9-byte match, 1 indicates a 10-byte match and so on. The minimum match length is 9 and the maximum match length is 264.
 
-The 5 least-significant bits of `opcode[0]` combined with the 8 bits of `opcode[2]`, _R_, determines the **reference offset **. Since the offset is encoded in 13 bits, the minimum is 0 and the maximum is 8191.
+The 5 least-significant bits of `opcode[0]` combined with the 8 bits of `opcode[2]`, _R_, determines the **reference offset**. Since the offset is encoded in 13 bits, the minimum is 0 and the maximum is 8191.
 
 The following C code retrieves the match length and reference offset:
 
