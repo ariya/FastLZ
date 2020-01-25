@@ -225,8 +225,6 @@ jobs:
   steps:
   - script: git clone https://github.com/ariya/compression-corpus.git
     displayName: 'Retrieve test compression corpus'
-  - script: sudo apt-get -y -qq update
-    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
@@ -258,8 +256,6 @@ jobs:
   steps:
   - script: git clone https://github.com/ariya/compression-corpus.git
     displayName: 'Retrieve test compression corpus'
-  - script: sudo apt-get -y -qq update
-    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
@@ -291,8 +287,6 @@ jobs:
   steps:
   - script: git clone https://github.com/ariya/compression-corpus.git
     displayName: 'Retrieve test compression corpus'
-  - script: sudo apt-get -y -qq update
-    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
@@ -324,8 +318,6 @@ jobs:
   steps:
   - script: git clone https://github.com/ariya/compression-corpus.git
     displayName: 'Retrieve test compression corpus'
-  - script: sudo apt-get -y -qq update
-    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
@@ -411,8 +403,6 @@ jobs:
   steps:
   - script: git clone https://github.com/ariya/compression-corpus.git
     displayName: 'Retrieve test compression corpus'
-  - script: sudo apt-get -y -qq update
-    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
