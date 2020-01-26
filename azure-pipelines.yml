@@ -4,7 +4,11 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y make gcc
     displayName: 'Install requirements'
@@ -29,7 +33,11 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y make clang
     displayName: 'Install requirements'
@@ -53,7 +61,11 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y make gcc
     displayName: 'Install requirements'
@@ -77,7 +89,11 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y make tcc
     displayName: 'Install requirements'
@@ -91,7 +107,11 @@ jobs:
   pool:
     vmImage: 'macOS 10.13'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: cc --version
     displayName: 'Verify tools version'
@@ -113,7 +133,11 @@ jobs:
   pool:
     vmImage: 'macOS 10.13'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: brew install gcc@9
     displayName: 'Install requirements'
@@ -139,7 +163,11 @@ jobs:
   variables:
     CC: 'gcc'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: choco install mingw --version 8.1.0
     displayName: 'install MinGW-w64'
@@ -163,7 +191,11 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - task: BatchScript@1
     inputs:
@@ -191,7 +223,11 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - task: BatchScript@1
     inputs:
@@ -219,7 +255,11 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
@@ -250,7 +290,11 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
@@ -281,7 +325,11 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
@@ -312,7 +360,11 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
@@ -343,7 +395,11 @@ jobs:
   pool:
     vmImage: 'macOS 10.13'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: cc --version
     displayName: 'Verify tools version'
@@ -369,7 +425,11 @@ jobs:
   pool:
     vmImage: 'macOS 10.13'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: brew install gcc@9
     displayName: 'Install requirements'
@@ -397,7 +457,11 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: git clone https://github.com/ariya/compression-corpus.git
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'

@@ -208,7 +208,8 @@ int main(int argc, char** argv) {
                          "silesia/sao",
                          "silesia/webster",
                          "silesia/x-ray",
-                         "silesia/xml"};
+                         "silesia/xml",
+                         "enwik/enwik8.txt"};
 
   const int count = sizeof(names) / sizeof(names[0]);
   int i;
