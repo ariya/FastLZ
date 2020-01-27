@@ -20,7 +20,7 @@ jobs:
 
 - job: 'CodeQuality'
   pool:
-    vmImage: 'macOS 10.13'
+    vmImage: 'macOS-latest'
   steps:
   - script: brew install clang-format && clang-format --version
     displayName: 'Install clang-format'
@@ -105,7 +105,7 @@ jobs:
 
 - job: 'amd64_macos_clang'
   pool:
-    vmImage: 'macOS 10.13'
+    vmImage: 'macOS-latest'
   steps:
   - script: |
       git clone https://github.com/ariya/compression-corpus.git
@@ -131,7 +131,7 @@ jobs:
 
 - job: 'amd64_macos_gcc'
   pool:
-    vmImage: 'macOS 10.13'
+    vmImage: 'macOS-latest'
   steps:
   - script: |
       git clone https://github.com/ariya/compression-corpus.git
@@ -393,7 +393,7 @@ jobs:
 
 - job: 'i686_macos_clang'
   pool:
-    vmImage: 'macOS 10.13'
+    vmImage: 'macOS-latest'
   steps:
   - script: |
       git clone https://github.com/ariya/compression-corpus.git
@@ -423,7 +423,7 @@ jobs:
 
 - job: 'i686_macos_gcc'
   pool:
-    vmImage: 'macOS 10.13'
+    vmImage: 'macOS-latest'
   steps:
   - script: |
       git clone https://github.com/ariya/compression-corpus.git
