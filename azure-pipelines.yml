@@ -14,6 +14,9 @@ jobs:
     displayName: 'Install requirements'
   - script: gcc --version
     displayName: 'Verify tools version'
+  - script: CC=gcc CFLAGS="-g -fno-omit-frame-pointer -fsanitize=address -DFASTLZ_USE_SAFE_DECOMPRESSOR=0" make roundtrip
+    workingDirectory: tests
+    displayName: 'Perform round-trip tests with unsafe decompressor'
   - script: CC=gcc CFLAGS="-g -fno-omit-frame-pointer -fsanitize=address" make roundtrip
     workingDirectory: tests
     displayName: 'Perform round-trip tests'

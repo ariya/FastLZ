@@ -29,6 +29,10 @@
  * Generally it is best to leave it defined.
  */
 #define FASTLZ_SAFE
+#if defined(FASTLZ_USE_SAFE_DECOMPRESSOR) && (FASTLZ_USE_SAFE_DECOMPRESSOR == 0)
+#undef FASTLZ_SAFE
+#warning No bound check in the decompressor: USE WITH CAUTION
+#endif
 
 /*
  * Give hints to the compiler for branch prediction optimization.
