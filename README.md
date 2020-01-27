@@ -87,8 +87,8 @@ The continuous integration system runs an extensive set of compression-decompres
 </tr>
 <tr align=center>
   <td>macOS</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
+  <td></td>
+  <td></td>
   <td></td>
   <td></td>
   <td></td>

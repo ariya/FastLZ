@@ -392,6 +392,7 @@ jobs:
     displayName: 'Build and run examples: 6pack and 6unpack'
 
 - job: 'i686_macos_clang'
+  condition: eq(1, 2)
   pool:
     vmImage: 'macOS-latest'
   steps:
@@ -422,6 +423,7 @@ jobs:
     displayName: 'Run examples: 6pack and 6unpack'
 
 - job: 'i686_macos_gcc'
+  condition: eq(1, 2)
   pool:
     vmImage: 'macOS-latest'
   steps:
