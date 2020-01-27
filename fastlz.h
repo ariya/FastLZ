@@ -24,13 +24,13 @@
 #ifndef FASTLZ_H
 #define FASTLZ_H
 
-#define FASTLZ_VERSION 0x000400
+#define FASTLZ_VERSION 0x000500
 
 #define FASTLZ_VERSION_MAJOR 0
-#define FASTLZ_VERSION_MINOR 4
+#define FASTLZ_VERSION_MINOR 5
 #define FASTLZ_VERSION_REVISION 0
 
-#define FASTLZ_VERSION_STRING "0.4.0"
+#define FASTLZ_VERSION_STRING "0.5.0"
 
 #if defined(__cplusplus)
 extern "C" {
