@@ -54,7 +54,7 @@ jobs:
     displayName: 'Build examples: 6pack and 6unpack'
   - script: |
       ./6pack -v
-      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       ./6unpack -v
       ./6unpack archive.6pk
     workingDirectory: examples
@@ -82,7 +82,7 @@ jobs:
     displayName: 'Build examples: 6pack and 6unpack'
   - script: |
       ./6pack -v
-      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       ./6unpack -v
       ./6unpack archive.6pk
     workingDirectory: examples
@@ -126,7 +126,7 @@ jobs:
     displayName: 'Build examples: 6pack and 6unpack'
   - script: |
       ./6pack -v
-      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       ./6unpack -v
       ./6unpack archive.6pk
     workingDirectory: examples
@@ -154,7 +154,7 @@ jobs:
     displayName: 'Build examples: 6pack and 6unpack'
   - script: |
       ./6pack -v
-      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       ./6unpack -v
       ./6unpack archive.6pk
     workingDirectory: examples
@@ -184,7 +184,7 @@ jobs:
     displayName: 'Build examples: 6pack and 6unpack'
   - script: |
       .6pack -v
-      6pack ../compression-corpus/silesia/webster archive.6pk
+      6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       6unpack -v
       6unpack archive.6pk
     workingDirectory: examples
@@ -284,7 +284,7 @@ jobs:
       ./dockcross/dockcross-linux-arm64 bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
       cd examples
       qemu-aarch64 ./6pack -v
-      qemu-aarch64 ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-aarch64 ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       qemu-aarch64 ./6unpack -v
       qemu-aarch64 ./6unpack archive.6pk
     displayName: 'Build and run examples: 6pack and 6unpack'
@@ -319,7 +319,7 @@ jobs:
       ./dockcross/dockcross-linux-armv7 bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
       cd examples
       qemu-arm ./6pack -v
-      qemu-arm ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-arm ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       qemu-arm ./6unpack -v
       qemu-arm ./6unpack archive.6pk
     displayName: 'Build and run examples: 6pack and 6unpack'
@@ -354,7 +354,7 @@ jobs:
       ./dockcross/dockcross-linux-x86 bash -c 'sudo apt install -y clang && cd examples && clang -o 6unpack -Wall -m32 -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
       cd examples
       qemu-i386 ./6pack -v
-      qemu-i386 ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-i386 ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       qemu-i386 ./6unpack -v
       qemu-i386 ./6unpack archive.6pk
     displayName: 'Build and run examples: 6pack and 6unpack'
@@ -389,7 +389,7 @@ jobs:
       ./dockcross/dockcross-linux-x86 bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
       cd examples
       qemu-i386 ./6pack -v
-      qemu-i386 ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-i386 ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       qemu-i386 ./6unpack -v
       qemu-i386 ./6unpack archive.6pk
     displayName: 'Build and run examples: 6pack and 6unpack'
@@ -418,7 +418,7 @@ jobs:
   - script: |
       file ./6pack
       ./6pack -v
-      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       file ./6unpack
       ./6unpack -v
       ./6unpack archive.6pk
@@ -451,7 +451,7 @@ jobs:
   - script: |
       file ./6pack
       ./6pack -v
-      ./6pack ../compression-corpus/silesia/webster archive.6pk
+      ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       file ./6unpack
       ./6unpack -v
       ./6unpack archive.6pk
@@ -488,7 +488,7 @@ jobs:
       ./dockcross/dockcross-linux-mips bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
       cd examples
       qemu-mips ./6pack -v
-      qemu-mips ./6pack ../compression-corpus/silesia/webster archive.6pk
+      qemu-mips ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
       qemu-mips ./6unpack -v
       qemu-mips ./6unpack archive.6pk
     displayName: 'Build and run examples: 6pack and 6unpack'
