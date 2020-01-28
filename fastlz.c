@@ -22,6 +22,7 @@
 */
 
 #include "fastlz.h"
+
 #include <stdint.h>
 
 /*

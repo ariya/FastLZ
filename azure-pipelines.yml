@@ -29,7 +29,7 @@ jobs:
     displayName: 'Install clang-format'
   - script: clang-format -i --style=google *.h *.c tests/*.c examples/*.c
     displayName: 'Run code formatter'
-  - script: git diff HEAD
+  - script: git diff --quiet HEAD
     displayName: 'Check if the styling guide is followed'
 
 - job: 'amd64_linux_clang'
