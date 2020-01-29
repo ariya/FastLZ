@@ -32,7 +32,6 @@
 #define FASTLZ_SAFE
 #if defined(FASTLZ_USE_SAFE_DECOMPRESSOR) && (FASTLZ_USE_SAFE_DECOMPRESSOR == 0)
 #undef FASTLZ_SAFE
-#warning No bound check in the decompressor: USE WITH CAUTION
 #endif
 
 /*
