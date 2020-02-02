@@ -9,9 +9,9 @@ The focus for FastLZ is a very fast compression and decompression, doing that at
 
 ||Ratio|Compression|Decompression
 |--|--|--|--|
-|FastLZ |54.2%|11.1 ns/byte|6.6 ns/byte|
-|zlib -1|42.3%|39.7 ns/byte|8.9 ns/byte|
-|zlib -9|36.5%|136.2 ns/byte|8.8 ns/byte|
+|FastLZ |54.2%|159 MB/s|305 MB/s|
+|zlib -1|42.3%|50 MB/s|184 MB/s|
+|zlib -9|36.5%|11 MB/s|185 MB/s|
 
 FastLZ is used by many software products, from a number of games (such as [Death Stranding](https://en.wikipedia.org/wiki/Death_Stranding)) to various open-source projects ([Godot Engine](https://godotengine.org/), [Facebook HHVM](https://hhvm.com/), [Apache Traffic Server](https://trafficserver.apache.org/), [Calligra Office](https://www.calligra.org/), [OSv](http://osv.io/), [Netty](https://netty.io/), etc). It even serves as the basis for other compression projects like [BLOSC](https://blosc.org/).
 
