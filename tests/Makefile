@@ -3,8 +3,8 @@ TEST_ROUNDTRIP=./test_roundtrip
 
 all: roundtrip
 
-roundtrip: test_roundtrip.c ../fastlz.c
-	$(CC) -o $(TEST_ROUNDTRIP)  $(CFLAGS) -I.. test_roundtrip.c ../fastlz.c
+roundtrip: test_roundtrip.c ../fastlz.c refimpl.c
+	$(CC) -o $(TEST_ROUNDTRIP)  $(CFLAGS) -I.. test_roundtrip.c ../fastlz.c refimpl.c
 	$(TEST_ROUNDTRIP)
 
 clean :

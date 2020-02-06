@@ -46,6 +46,150 @@ int compare(const char* name, const uint8_t* a, const uint8_t* b, int size) {
   return bad;
 }
 
+/* prototype, implemented in refimpl.c */
+void REF_Level1_decompress(const uint8_t* input, int length, uint8_t* output);
+void REF_Level2_decompress(const uint8_t* input, int length, uint8_t* output);
+
+/*
+  Same as test_roundtrip_level1 EXCEPT that the decompression is carried out
+  using the highly-simplified, unoptimized vanilla reference decompressor.
+*/
+
+void test_ref_decompressor_level1(const char* name, const char* file_name) {
+#ifdef LOG
+  printf("Processing %s...\n", name);
+#endif
+  FILE* f = fopen(file_name, "rb");
+  if (!f) {
+    printf("Error: can not open %s!\n", file_name);
+    exit(1);
+  }
+  fseek(f, 0L, SEEK_END);
+  long file_size = ftell(f);
+  rewind(f);
+#ifdef LOG
+  printf("Size is %ld bytes.\n", file_size);
+#endif
+  uint8_t* file_buffer = malloc(file_size);
+  long read = fread(file_buffer, 1, file_size, f);
+  fclose(f);
+  if (read != file_size) {
+    free(file_buffer);
+    printf("Error: only read %ld bytes!\n", read);
+    exit(1);
+  }
+
+#ifdef LOG
+  printf("Compressing. Please wait...\n");
+#endif
+  uint8_t* compressed_buffer = malloc(1.05 * file_size);
+  int compressed_size =
+      fastlz_compress_level(1, file_buffer, file_size, compressed_buffer);
+  double ratio = (100.0 * compressed_size) / file_size;
+#ifdef LOG
+  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size,
+         compressed_size, ratio);
+#endif
+
+#ifdef LOG
+  printf("Decompressing. Please wait...\n");
+#endif
+  uint8_t* uncompressed_buffer = malloc(file_size);
+  memset(uncompressed_buffer, '-', file_size);
+  REF_Level1_decompress(compressed_buffer, compressed_size,
+                        uncompressed_buffer);
+#ifdef LOG
+  printf("Comparing. Please wait...\n");
+#endif
+  int result = compare(file_name, file_buffer, uncompressed_buffer, file_size);
+  if (result == 1) {
+    free(uncompressed_buffer);
+    exit(1);
+  }
+
+  free(file_buffer);
+  free(compressed_buffer);
+  free(uncompressed_buffer);
+#ifdef LOG
+  printf("OK.\n");
+#else
+  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size,
+         ratio);
+#endif
+}
+
+/*
+  Same as test_roundtrip_level2 EXCEPT that the decompression is carried out
+  using the highly-simplified, unoptimized vanilla reference decompressor.
+*/
+
+void test_ref_decompressor_level2(const char* name, const char* file_name) {
+#ifdef LOG
+  printf("Processing %s...\n", name);
+#endif
+  FILE* f = fopen(file_name, "rb");
+  if (!f) {
+    printf("Error: can not open %s!\n", file_name);
+    exit(1);
+  }
+  fseek(f, 0L, SEEK_END);
+  long file_size = ftell(f);
+  rewind(f);
+#ifdef LOG
+  printf("Size is %ld bytes.\n", file_size);
+#endif
+  uint8_t* file_buffer = malloc(file_size);
+  long read = fread(file_buffer, 1, file_size, f);
+  fclose(f);
+  if (read != file_size) {
+    free(file_buffer);
+    printf("Error: only read %ld bytes!\n", read);
+    exit(1);
+  }
+
+#ifdef LOG
+  printf("Compressing. Please wait...\n");
+#endif
+  uint8_t* compressed_buffer = malloc(1.05 * file_size);
+  int compressed_size =
+      fastlz_compress_level(2, file_buffer, file_size, compressed_buffer);
+  double ratio = (100.0 * compressed_size) / file_size;
+#ifdef LOG
+  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size,
+         compressed_size, ratio);
+#endif
+
+#ifdef LOG
+  printf("Decompressing. Please wait...\n");
+#endif
+  uint8_t* uncompressed_buffer = malloc(file_size);
+  memset(uncompressed_buffer, '-', file_size);
+
+  /* intentionally mask out the block tag */
+  compressed_buffer[0] = compressed_buffer[0] & 31;
+
+  REF_Level2_decompress(compressed_buffer, compressed_size,
+                        uncompressed_buffer);
+#ifdef LOG
+  printf("Comparing. Please wait...\n");
+#endif
+  int result = compare(file_name, file_buffer, uncompressed_buffer, file_size);
+  if (result == 1) {
+    free(uncompressed_buffer);
+    exit(1);
+  }
+
+  free(file_buffer);
+  free(compressed_buffer);
+  free(uncompressed_buffer);
+#ifdef LOG
+  printf("OK.\n");
+#else
+  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size,
+         ratio);
+#endif
+}
+
 /*
   Read the content of the file.
   Compress it first using the Level 1 compressor.
@@ -213,6 +357,28 @@ int main(int argc, char** argv) {
 
   const int count = sizeof(names) / sizeof(names[0]);
   int i;
+
+  printf("Test reference decompressor for Level 1\n\n");
+  for (i = 0; i < count; ++i) {
+    const char* name = names[i];
+    char* filename = malloc(strlen(prefix) + strlen(name) + 1);
+    strcpy(filename, prefix);
+    strcat(filename, name);
+    test_ref_decompressor_level1(name, filename);
+    free(filename);
+  }
+  printf("\n");
+
+  printf("Test reference decompressor for Level 2\n\n");
+  for (i = 0; i < count; ++i) {
+    const char* name = names[i];
+    char* filename = malloc(strlen(prefix) + strlen(name) + 1);
+    strcpy(filename, prefix);
+    strcat(filename, name);
+    test_ref_decompressor_level2(name, filename);
+    free(filename);
+  }
+  printf("\n");
 
   printf("Test round-trip for Level 1\n\n");
   for (i = 0; i < count; ++i) {

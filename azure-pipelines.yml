@@ -277,7 +277,7 @@ jobs:
   - script: ./dockcross/dockcross-linux-arm64 bash -c '$CC --version'
     displayName: 'Verify tools version'
   - script: |
-      ./dockcross/dockcross-linux-arm64 bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c'
+      ./dockcross/dockcross-linux-arm64 bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c refimpl.c'
       cd tests
       file ./test_roundtrip
       qemu-aarch64 ./test_roundtrip
@@ -312,7 +312,7 @@ jobs:
   - script: ./dockcross/dockcross-linux-armv7 bash -c '$CC --version'
     displayName: 'Verify tools version'
   - script: |
-      ./dockcross/dockcross-linux-armv7 bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c'
+      ./dockcross/dockcross-linux-armv7 bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c refimpl.c'
       cd tests
       file ./test_roundtrip
       qemu-arm ./test_roundtrip
@@ -347,7 +347,7 @@ jobs:
   - script: ./dockcross/dockcross-linux-x86 bash -c "sudo apt install -y clang && clang -v"
     displayName: 'Check tools versions'
   - script: |
-      ./dockcross/dockcross-linux-x86 bash -c 'sudo apt install -y clang && cd tests && clang -o test_roundtrip -Wall -m32 -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c'
+      ./dockcross/dockcross-linux-x86 bash -c 'sudo apt install -y clang && cd tests && clang -o test_roundtrip -Wall -m32 -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c refimpl.c'
       cd tests
       file ./test_roundtrip
       qemu-i386 ./test_roundtrip
@@ -382,7 +382,7 @@ jobs:
   - script: ./dockcross/dockcross-linux-x86 bash -c '$CC --version'
     displayName: 'Verify tools version'
   - script: |
-      ./dockcross/dockcross-linux-x86 bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c'
+      ./dockcross/dockcross-linux-x86 bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c refimpl.c'
       cd tests
       file ./test_roundtrip
       qemu-i386 ./test_roundtrip
@@ -481,7 +481,7 @@ jobs:
   - script: ./dockcross/dockcross-linux-mips bash -c '$CC --version'
     displayName: 'Verify tools version'
   - script: |
-      ./dockcross/dockcross-linux-mips bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c'
+      ./dockcross/dockcross-linux-mips bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c refimpl.c'
       cd tests
       file ./test_roundtrip
       qemu-mips ./test_roundtrip
