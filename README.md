@@ -100,7 +100,7 @@ The continuous integration system runs an extensive set of compression-decompres
   <td>&#x2714;</td>
   <td>&#x2714;</td>
   <td>&#x2714;</td>
-<tr>
+</tr>
 <tr align=center>
   <td>arm64</td>
   <td>Linux</td>
