@@ -163,6 +163,25 @@ jobs:
     workingDirectory: examples
     displayName: 'Run examples: 6pack and 6unpack'
 
+- job: 'amd64_windows_digitalmars'
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - script: |
+      git clone https://github.com/ariya/compression-corpus.git
+      cd compression-corpus
+      cd enwik
+      unzip enwik8.zip
+    displayName: 'Retrieve test compression corpus'
+  - script: |
+      choco install unzip
+      curl -o dm857c.zip http://ftp.digitalmars.com/Digital_Mars_C++/Patch/dm857c.zip
+      unzip dm857c.zip
+    displayName: 'Install requirements'
+  - script: make CC="..\dm\bin\dmc" CFLAGS="-w- -v2 -A " roundtrip
+    workingDirectory: tests
+    displayName: 'Perform round-trip tests'
+
 - job: 'amd64_windows_gcc'
   pool:
     vmImage: 'vs2017-win2016'
