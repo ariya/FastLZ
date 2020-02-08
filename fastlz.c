@@ -136,29 +136,20 @@ int fastlz1_compress(const void* input, int length, void* output) {
     /* distance is biased */
     distance--;
 
-    if (!distance) {
-      /* zero distance means a run */
-      uint8_t x = ip[-1];
+    for (;;) {
+      /* safe because the outer check against ip limit */
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
       while (ip < ip_bound)
-        if (*ref++ != x)
-          break;
-        else
-          ip++;
-    } else
-      for (;;) {
-        /* safe because the outer check against ip limit */
         if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        while (ip < ip_bound)
-          if (*ref++ != *ip++) break;
-        break;
-      }
+      break;
+    }
 
     /* if we have copied something, adjust the copy count */
     if (copy) /* copy is biased, '0' means 1 byte copy */
@@ -360,14 +351,6 @@ int fastlz2_compress(const void* input, int length, void* output) {
     /* comparison starting-point */
     const uint8_t* anchor = ip;
 
-    /* check for a run */
-    if (ip[0] == ip[-1] && ip[0] == ip[1] && ip[1] == ip[2]) {
-      distance = 1;
-      ip += 3;
-      ref = anchor - 1 + 3;
-      goto match;
-    }
-
     /* find potential match */
     HASH_FUNCTION(hval, ip);
     ref = htab[hval];
@@ -397,29 +380,20 @@ int fastlz2_compress(const void* input, int length, void* output) {
     /* distance is biased */
     distance--;
 
-    if (!distance) {
-      /* zero distance means a run */
-      uint8_t x = ip[-1];
+    for (;;) {
+      /* safe because the outer check against ip limit */
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
+      if (*ref++ != *ip++) break;
       while (ip < ip_bound)
-        if (*ref++ != x)
-          break;
-        else
-          ip++;
-    } else
-      for (;;) {
-        /* safe because the outer check against ip limit */
         if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        if (*ref++ != *ip++) break;
-        while (ip < ip_bound)
-          if (*ref++ != *ip++) break;
-        break;
-      }
+      break;
+    }
 
     /* if we have copied something, adjust the copy count */
     if (copy) /* copy is biased, '0' means 1 byte copy */
