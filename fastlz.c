@@ -126,8 +126,8 @@ int fastlz1_compress(const void* input, int length, void* output) {
     distance = anchor - ref;
 
     /* is this a match? check the first 3 bytes */
-    if (distance == 0 || (distance >= MAX_L1_DISTANCE) || *ref++ != *ip++ ||
-        *ref++ != *ip++ || *ref++ != *ip++)
+    if ((distance >= MAX_L1_DISTANCE) || *ref++ != *ip++ || *ref++ != *ip++ ||
+        *ref++ != *ip++)
       goto literal;
 
     /* last matched byte */
@@ -362,8 +362,8 @@ int fastlz2_compress(const void* input, int length, void* output) {
     distance = anchor - ref;
 
     /* is this a match? check the first 3 bytes */
-    if (distance == 0 || (distance >= MAX_FARDISTANCE) || *ref++ != *ip++ ||
-        *ref++ != *ip++ || *ref++ != *ip++)
+    if ((distance >= MAX_FARDISTANCE) || *ref++ != *ip++ || *ref++ != *ip++ ||
+        *ref++ != *ip++)
       goto literal;
 
     /* far, needs at least 5-byte match */
