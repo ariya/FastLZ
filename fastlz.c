@@ -45,6 +45,13 @@
 #define FASTLZ_UNLIKELY(c) (c)
 #endif
 
+/*
+ * Specialize custom 64-bit implementation for speed improvements.
+ */
+#if defined(__x86_64__) || defined(_M_X64)
+#define FLZ_ARCH64
+#endif
+
 #if defined(FASTLZ_SAFE)
 #define FASTLZ_BOUND_CHECK(cond) \
   if (FASTLZ_UNLIKELY(!(cond))) return 0;
@@ -53,176 +60,6 @@
   do {                           \
   } while (0)
 #endif
-
-#define MAX_COPY 32
-#define MAX_LEN 264 /* 256 + 8 */
-#define MAX_L1_DISTANCE 8192
-#define MAX_L2_DISTANCE 8191
-#define MAX_FARDISTANCE (65535 + MAX_L2_DISTANCE - 1)
-
-#define FASTLZ_READU16(p) ((p)[0] | (p)[1] << 8)
-
-#define HASH_LOG 13
-#define HASH_SIZE (1 << HASH_LOG)
-#define HASH_MASK (HASH_SIZE - 1)
-#define HASH_FUNCTION(v, p)                              \
-  {                                                      \
-    v = FASTLZ_READU16(p);                               \
-    v ^= FASTLZ_READU16(p + 1) ^ (v >> (16 - HASH_LOG)); \
-    v &= HASH_MASK;                                      \
-  }
-
-int fastlz1_compress(const void* input, int length, void* output) {
-  const uint8_t* ip = (const uint8_t*)input;
-  const uint8_t* ip_bound = ip + length - 2;
-  const uint8_t* ip_limit = ip + length - 12 - 1;
-  uint8_t* op = (uint8_t*)output;
-
-  const uint8_t* htab[HASH_SIZE];
-  uint32_t hval;
-
-  uint32_t copy;
-
-  /* sanity check */
-  if (FASTLZ_UNLIKELY(length < 4)) {
-    if (length) {
-      /* create literal copy only */
-      *op++ = length - 1;
-      ip_bound++;
-      while (ip <= ip_bound) *op++ = *ip++;
-      return length + 1;
-    } else
-      return 0;
-  }
-
-  /* initializes hash table */
-  for (hval = 0; hval < HASH_SIZE; ++hval) htab[hval] = ip;
-
-  /* we start with literal copy */
-  copy = 2;
-  *op++ = MAX_COPY - 1;
-  *op++ = *ip++;
-  *op++ = *ip++;
-
-  /* main loop */
-  while (FASTLZ_LIKELY(ip < ip_limit)) {
-    const uint8_t* ref;
-    uint32_t distance;
-
-    /* minimum match length */
-    uint32_t len = 3;
-
-    /* comparison starting-point */
-    const uint8_t* anchor = ip;
-
-    /* find potential match */
-    HASH_FUNCTION(hval, ip);
-    ref = htab[hval];
-
-    /* update hash table */
-    htab[hval] = anchor;
-
-    /* calculate distance to the match */
-    distance = anchor - ref;
-
-    /* is this a match? check the first 3 bytes */
-    if ((distance >= MAX_L1_DISTANCE) || *ref++ != *ip++ || *ref++ != *ip++ ||
-        *ref++ != *ip++)
-      goto literal;
-
-    /* last matched byte */
-    ip = anchor + len;
-
-    /* distance is biased */
-    distance--;
-
-    for (;;) {
-      /* safe because the outer check against ip limit */
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      while (ip < ip_bound)
-        if (*ref++ != *ip++) break;
-      break;
-    }
-
-    /* if we have copied something, adjust the copy count */
-    if (copy) /* copy is biased, '0' means 1 byte copy */
-      *(op - copy - 1) = copy - 1;
-    else
-      /* back, to overwrite the copy count */
-      op--;
-
-    /* reset literal counter */
-    copy = 0;
-
-    /* length is biased, '1' means a match of 3 bytes */
-    ip -= 3;
-    len = ip - anchor;
-
-    /* encode the match */
-    if (FASTLZ_UNLIKELY(len > MAX_LEN - 2))
-      while (len > MAX_LEN - 2) {
-        *op++ = (7 << 5) + (distance >> 8);
-        *op++ = MAX_LEN - 2 - 7 - 2;
-        *op++ = (distance & 255);
-        len -= MAX_LEN - 2;
-      }
-
-    if (len < 7) {
-      *op++ = (len << 5) + (distance >> 8);
-      *op++ = (distance & 255);
-    } else {
-      *op++ = (7 << 5) + (distance >> 8);
-      *op++ = len - 7;
-      *op++ = (distance & 255);
-    }
-
-    /* update the hash at match boundary */
-    HASH_FUNCTION(hval, ip);
-    htab[hval] = ip++;
-    HASH_FUNCTION(hval, ip);
-    htab[hval] = ip++;
-
-    /* assuming literal copy */
-    *op++ = MAX_COPY - 1;
-
-    continue;
-
-  literal:
-    *op++ = *anchor++;
-    ip = anchor;
-    copy++;
-    if (FASTLZ_UNLIKELY(copy == MAX_COPY)) {
-      copy = 0;
-      *op++ = MAX_COPY - 1;
-    }
-  }
-
-  /* left-over as literal copy */
-  ip_bound++;
-  while (ip <= ip_bound) {
-    *op++ = *ip++;
-    copy++;
-    if (copy == MAX_COPY) {
-      copy = 0;
-      *op++ = MAX_COPY - 1;
-    }
-  }
-
-  /* if we have copied something, adjust the copy length */
-  if (copy)
-    *(op - copy - 1) = copy - 1;
-  else
-    op--;
-
-  return op - (uint8_t*)output;
-}
 
 #if defined(FASTLZ_USE_MEMMOVE) && (FASTLZ_USE_MEMMOVE == 0)
 
@@ -268,6 +105,237 @@ static void fastlz_memcpy(uint8_t* dest, const uint8_t* src, uint32_t count) {
 
 #endif
 
+#if defined(FLZ_ARCH64)
+
+static uint32_t flz_readu32(const void* ptr) { return *(const uint32_t*)ptr; }
+
+static uint64_t flz_readu64(const void* ptr) { return *(const uint64_t*)ptr; }
+
+static uint32_t flz_cmp(const uint8_t* p, const uint8_t* q, const uint8_t* r) {
+  const uint8_t* start = p;
+
+  if (flz_readu64(p) == flz_readu64(q)) {
+    p += 8;
+    q += 8;
+  }
+  if (flz_readu32(p) == flz_readu32(q)) {
+    p += 4;
+    q += 4;
+  }
+  while (q < r)
+    if (*p++ != *q++) break;
+  return p - start;
+}
+
+static void flz_copy64(uint8_t* dest, const uint8_t* src, uint32_t count) {
+  const uint64_t* p = (const uint64_t*)src;
+  uint64_t* q = (uint64_t*)dest;
+  if (count < 16) {
+    if (count >= 8) {
+      *q++ = *p++;
+    }
+    *q++ = *p++;
+  } else {
+    *q++ = *p++;
+    *q++ = *p++;
+    *q++ = *p++;
+    *q++ = *p++;
+  }
+}
+
+static void flz_copy256(void* dest, const void* src) {
+  const uint64_t* p = (const uint64_t*)src;
+  uint64_t* q = (uint64_t*)dest;
+  *q++ = *p++;
+  *q++ = *p++;
+  *q++ = *p++;
+  *q++ = *p++;
+}
+
+#endif /* FLZ_ARCH64 */
+
+#if !defined(FLZ_ARCH64)
+
+static uint32_t flz_readu32(const void* ptr) {
+  const uint8_t* p = (const uint8_t*)ptr;
+  return (p[3] << 24) | (p[2] << 16) | (p[1] << 8) | p[0];
+}
+
+static uint32_t flz_cmp(const uint8_t* p, const uint8_t* q, const uint8_t* r) {
+  const uint8_t* start = p;
+  while (q < r)
+    if (*p++ != *q++) break;
+  return p - start;
+}
+
+static void flz_copy64(uint8_t* dest, const uint8_t* src, uint32_t count) {
+  const uint8_t* p = (const uint8_t*)src;
+  uint8_t* q = (uint8_t*)dest;
+  int c;
+  for (c = 0; c < count * 8; ++c) {
+    *q++ = *p++;
+  }
+}
+
+static void flz_copy256(void* dest, const void* src) {
+  const uint8_t* p = (const uint8_t*)src;
+  uint8_t* q = (uint8_t*)dest;
+  int c;
+  for (c = 0; c < 32; ++c) {
+    *q++ = *p++;
+  }
+}
+
+#endif /* !FLZ_ARCH64 */
+
+#define MAX_COPY 32
+#define MAX_LEN 264 /* 256 + 8 */
+#define MAX_L1_DISTANCE 8192
+#define MAX_L2_DISTANCE 8191
+#define MAX_FARDISTANCE (65535 + MAX_L2_DISTANCE - 1)
+
+#define HASH_LOG 14
+#define HASH_SIZE (1 << HASH_LOG)
+#define HASH_MASK (HASH_SIZE - 1)
+
+static uint16_t flz_hash(uint32_t v) {
+  uint32_t h = (v * 2654435769LL) >> (32 - HASH_LOG);
+  return h & HASH_MASK;
+}
+
+static uint8_t* flz_literals(uint32_t runs, const uint8_t* src, uint8_t* dest) {
+  while (runs >= MAX_COPY) {
+    *dest++ = MAX_COPY - 1;
+    flz_copy256(dest, src);
+    src += MAX_COPY;
+    dest += MAX_COPY;
+    runs -= MAX_COPY;
+  }
+  if (runs > 0) {
+    *dest++ = runs - 1;
+    flz_copy64(dest, src, runs);
+    dest += runs;
+  }
+  return dest;
+}
+
+/* special case of memcpy: at most 32 bytes */
+static void flz_smallcopy(uint8_t* dest, const uint8_t* src, uint32_t count) {
+#if defined(FLZ_ARCH64)
+  if (count >= 8) {
+    const uint64_t* p = (const uint64_t*)src;
+    uint64_t* q = (uint64_t*)dest;
+    while (count > 8) {
+      *q++ = *p++;
+      count -= 8;
+      dest += 8;
+      src += 8;
+    }
+  }
+#endif
+  fastlz_memcpy(dest, src, count);
+}
+
+static uint8_t* flz_finalize(uint32_t runs, const uint8_t* src, uint8_t* dest) {
+  while (runs >= MAX_COPY) {
+    *dest++ = MAX_COPY - 1;
+    flz_smallcopy(dest, src, MAX_COPY);
+    src += MAX_COPY;
+    dest += MAX_COPY;
+    runs -= MAX_COPY;
+  }
+  if (runs > 0) {
+    *dest++ = runs - 1;
+    flz_smallcopy(dest, src, runs);
+    dest += runs;
+  }
+  return dest;
+}
+
+static uint8_t* flz1_match(uint32_t len, uint32_t distance, uint8_t* op) {
+  --distance;
+  if (FASTLZ_UNLIKELY(len > MAX_LEN - 2))
+    while (len > MAX_LEN - 2) {
+      *op++ = (7 << 5) + (distance >> 8);
+      *op++ = MAX_LEN - 2 - 7 - 2;
+      *op++ = (distance & 255);
+      len -= MAX_LEN - 2;
+    }
+  if (len < 7) {
+    *op++ = (len << 5) + (distance >> 8);
+    *op++ = (distance & 255);
+  } else {
+    *op++ = (7 << 5) + (distance >> 8);
+    *op++ = len - 7;
+    *op++ = (distance & 255);
+  }
+  return op;
+}
+
+int fastlz1_compress(const void* input, int length, void* output) {
+  const uint8_t* ip = (const uint8_t*)input;
+  const uint8_t* ip_start = ip;
+  const uint8_t* ip_bound = ip + length - 4; /* because readU32 */
+  const uint8_t* ip_limit = ip + length - 12 - 1;
+  uint8_t* op = (uint8_t*)output;
+
+  uint32_t htab[HASH_SIZE];
+  uint32_t seq, hash;
+
+  /* initializes hash table */
+  for (hash = 0; hash < HASH_SIZE; ++hash) htab[hash] = 0;
+
+  /* we start with literal copy */
+  const uint8_t* anchor = ip;
+  ip += 2;
+
+  /* main loop */
+  while (FASTLZ_LIKELY(ip < ip_limit)) {
+    const uint8_t* ref;
+    uint32_t distance, cmp;
+
+    /* find potential match */
+    do {
+      seq = flz_readu32(ip) & 0xffffff;
+      hash = flz_hash(seq);
+      ref = ip_start + htab[hash];
+      htab[hash] = ip - ip_start;
+      distance = ip - ref;
+      cmp = FASTLZ_LIKELY(distance < MAX_L1_DISTANCE)
+                ? flz_readu32(ref) & 0xffffff
+                : 0x1000000;
+      if (FASTLZ_UNLIKELY(ip >= ip_limit)) break;
+      ++ip;
+    } while (seq != cmp);
+
+    if (FASTLZ_UNLIKELY(ip >= ip_limit)) break;
+    --ip;
+
+    if (FASTLZ_LIKELY(ip > anchor)) {
+      op = flz_literals(ip - anchor, anchor, op);
+    }
+
+    uint32_t len = flz_cmp(ref + 3, ip + 3, ip_bound);
+    op = flz1_match(len, distance, op);
+
+    /* update the hash at match boundary */
+    ip += len;
+    seq = flz_readu32(ip);
+    hash = flz_hash(seq & 0xffffff);
+    htab[hash] = ip++ - ip_start;
+    seq >>= 8;
+    hash = flz_hash(seq);
+    htab[hash] = ip++ - ip_start;
+
+    anchor = ip;
+  }
+
+  uint32_t copy = (uint8_t*)input + length - anchor;
+  op = flz_finalize(copy, anchor, op);
+
+  return op - (uint8_t*)output;
+}
+
 int fastlz1_decompress(const void* input, int length, void* output,
                        int maxout) {
   const uint8_t* ip = (const uint8_t*)input;
@@ -308,174 +376,108 @@ int fastlz1_decompress(const void* input, int length, void* output,
   return op - (uint8_t*)output;
 }
 
+static uint8_t* flz2_match(uint32_t len, uint32_t distance, uint8_t* op) {
+  --distance;
+  if (distance < MAX_L2_DISTANCE) {
+    if (len < 7) {
+      *op++ = (len << 5) + (distance >> 8);
+      *op++ = (distance & 255);
+    } else {
+      *op++ = (7 << 5) + (distance >> 8);
+      for (len -= 7; len >= 255; len -= 255) *op++ = 255;
+      *op++ = len;
+      *op++ = (distance & 255);
+    }
+  } else {
+    /* far away, but not yet in the another galaxy... */
+    if (len < 7) {
+      distance -= MAX_L2_DISTANCE;
+      *op++ = (len << 5) + 31;
+      *op++ = 255;
+      *op++ = distance >> 8;
+      *op++ = distance & 255;
+    } else {
+      distance -= MAX_L2_DISTANCE;
+      *op++ = (7 << 5) + 31;
+      for (len -= 7; len >= 255; len -= 255) *op++ = 255;
+      *op++ = len;
+      *op++ = 255;
+      *op++ = distance >> 8;
+      *op++ = distance & 255;
+    }
+  }
+  return op;
+}
+
 int fastlz2_compress(const void* input, int length, void* output) {
   const uint8_t* ip = (const uint8_t*)input;
-  const uint8_t* ip_bound = ip + length - 2;
+  const uint8_t* ip_start = ip;
+  const uint8_t* ip_bound = ip + length - 4; /* because readU32 */
   const uint8_t* ip_limit = ip + length - 12 - 1;
   uint8_t* op = (uint8_t*)output;
 
-  const uint8_t* htab[HASH_SIZE];
-  uint32_t hval;
-
-  uint32_t copy;
-
-  /* sanity check */
-  if (FASTLZ_UNLIKELY(length < 4)) {
-    if (length) {
-      /* create literal copy only */
-      *op++ = length - 1;
-      ip_bound++;
-      while (ip <= ip_bound) *op++ = *ip++;
-      return length + 1;
-    } else
-      return 0;
-  }
+  uint32_t htab[HASH_SIZE];
+  uint32_t seq, hash;
 
   /* initializes hash table */
-  for (hval = 0; hval < HASH_SIZE; ++hval) htab[hval] = ip;
+  for (hash = 0; hash < HASH_SIZE; ++hash) htab[hash] = 0;
 
   /* we start with literal copy */
-  copy = 2;
-  *op++ = MAX_COPY - 1;
-  *op++ = *ip++;
-  *op++ = *ip++;
+  const uint8_t* anchor = ip;
+  ip += 2;
 
   /* main loop */
   while (FASTLZ_LIKELY(ip < ip_limit)) {
     const uint8_t* ref;
-    uint32_t distance;
-
-    /* minimum match length */
-    uint32_t len = 3;
-
-    /* comparison starting-point */
-    const uint8_t* anchor = ip;
+    uint32_t distance, cmp;
 
     /* find potential match */
-    HASH_FUNCTION(hval, ip);
-    ref = htab[hval];
+    do {
+      seq = flz_readu32(ip) & 0xffffff;
+      hash = flz_hash(seq);
+      ref = ip_start + htab[hash];
+      htab[hash] = ip - ip_start;
+      distance = ip - ref;
+      cmp = FASTLZ_LIKELY(distance < MAX_FARDISTANCE)
+                ? flz_readu32(ref) & 0xffffff
+                : 0x1000000;
+      if (FASTLZ_UNLIKELY(ip >= ip_limit)) break;
+      ++ip;
+    } while (seq != cmp);
 
-    /* update hash table */
-    htab[hval] = anchor;
+    if (FASTLZ_UNLIKELY(ip >= ip_limit)) break;
 
-    /* calculate distance to the match */
-    distance = anchor - ref;
-
-    /* is this a match? check the first 3 bytes */
-    if ((distance >= MAX_FARDISTANCE) || *ref++ != *ip++ || *ref++ != *ip++ ||
-        *ref++ != *ip++)
-      goto literal;
+    --ip;
 
     /* far, needs at least 5-byte match */
     if (distance >= MAX_L2_DISTANCE) {
-      if (*ip++ != *ref++ || *ip++ != *ref++) goto literal;
-      len += 2;
-    }
-
-  match:
-
-    /* last matched byte */
-    ip = anchor + len;
-
-    /* distance is biased */
-    distance--;
-
-    for (;;) {
-      /* safe because the outer check against ip limit */
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      if (*ref++ != *ip++) break;
-      while (ip < ip_bound)
-        if (*ref++ != *ip++) break;
-      break;
-    }
-
-    /* if we have copied something, adjust the copy count */
-    if (copy) /* copy is biased, '0' means 1 byte copy */
-      *(op - copy - 1) = copy - 1;
-    else
-      /* back, to overwrite the copy count */
-      op--;
-
-    /* reset literal counter */
-    copy = 0;
-
-    /* length is biased, '1' means a match of 3 bytes */
-    ip -= 3;
-    len = ip - anchor;
-
-    /* encode the match */
-    if (distance < MAX_L2_DISTANCE) {
-      if (len < 7) {
-        *op++ = (len << 5) + (distance >> 8);
-        *op++ = (distance & 255);
-      } else {
-        *op++ = (7 << 5) + (distance >> 8);
-        for (len -= 7; len >= 255; len -= 255) *op++ = 255;
-        *op++ = len;
-        *op++ = (distance & 255);
-      }
-    } else {
-      /* far away, but not yet in the another galaxy... */
-      if (len < 7) {
-        distance -= MAX_L2_DISTANCE;
-        *op++ = (len << 5) + 31;
-        *op++ = 255;
-        *op++ = distance >> 8;
-        *op++ = distance & 255;
-      } else {
-        distance -= MAX_L2_DISTANCE;
-        *op++ = (7 << 5) + 31;
-        for (len -= 7; len >= 255; len -= 255) *op++ = 255;
-        *op++ = len;
-        *op++ = 255;
-        *op++ = distance >> 8;
-        *op++ = distance & 255;
+      if (ref[3] != ip[3] || ref[4] != ip[4]) {
+        ++ip;
+        continue;
       }
     }
+
+    if (FASTLZ_LIKELY(ip > anchor)) {
+      op = flz_literals(ip - anchor, anchor, op);
+    }
+
+    uint32_t len = flz_cmp(ref + 3, ip + 3, ip_bound);
+    op = flz2_match(len, distance, op);
 
     /* update the hash at match boundary */
-    HASH_FUNCTION(hval, ip);
-    htab[hval] = ip++;
-    HASH_FUNCTION(hval, ip);
-    htab[hval] = ip++;
+    ip += len;
+    seq = flz_readu32(ip);
+    hash = flz_hash(seq & 0xffffff);
+    htab[hash] = ip++ - ip_start;
+    seq >>= 8;
+    hash = flz_hash(seq);
+    htab[hash] = ip++ - ip_start;
 
-    /* assuming literal copy */
-    *op++ = MAX_COPY - 1;
-
-    continue;
-
-  literal:
-    *op++ = *anchor++;
-    ip = anchor;
-    copy++;
-    if (FASTLZ_UNLIKELY(copy == MAX_COPY)) {
-      copy = 0;
-      *op++ = MAX_COPY - 1;
-    }
+    anchor = ip;
   }
 
-  /* left-over as literal copy */
-  ip_bound++;
-  while (ip <= ip_bound) {
-    *op++ = *ip++;
-    copy++;
-    if (copy == MAX_COPY) {
-      copy = 0;
-      *op++ = MAX_COPY - 1;
-    }
-  }
-
-  /* if we have copied something, adjust the copy length */
-  if (copy)
-    *(op - copy - 1) = copy - 1;
-  else
-    op--;
+  uint32_t copy = (uint8_t*)input + length - anchor;
+  op = flz_finalize(copy, anchor, op);
 
   /* marker for fastlz2 */
   *(uint8_t*)output |= (1 << 5);
