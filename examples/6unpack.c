@@ -38,20 +38,18 @@ static unsigned char sixpack_magic[8] = {137, '6', 'P', 'K', 13, 10, 26, 10};
 #define BLOCK_SIZE 65536
 
 /* prototypes */
-static unsigned long update_adler32(unsigned long checksum, const void* buf,
-                                    int len);
+static unsigned long update_adler32(unsigned long checksum, const void* buf, int len);
 void usage(void);
 int detect_magic(FILE* f);
 static unsigned long readU16(const unsigned char* ptr);
 static unsigned long readU32(const unsigned char* ptr);
-void read_chunk_header(FILE* f, int* id, int* options, unsigned long* size,
-                       unsigned long* checksum, unsigned long* extra);
+void read_chunk_header(FILE* f, int* id, int* options, unsigned long* size, unsigned long* checksum,
+                       unsigned long* extra);
 int unpack_file(const char* archive_file);
 
 /* for Adler-32 checksum algorithm, see RFC 1950 Section 8.2 */
 #define ADLER32_BASE 65521
-static unsigned long update_adler32(unsigned long checksum, const void* buf,
-                                    int len) {
+static unsigned long update_adler32(unsigned long checksum, const void* buf, int len) {
   const unsigned char* ptr = (const unsigned char*)buf;
   unsigned long s1 = checksum & 0xffff;
   unsigned long s2 = (checksum >> 16) & 0xffff;
@@ -116,16 +114,14 @@ int detect_magic(FILE* f) {
   return -1;
 }
 
-static unsigned long readU16(const unsigned char* ptr) {
-  return ptr[0] + (ptr[1] << 8);
-}
+static unsigned long readU16(const unsigned char* ptr) { return ptr[0] + (ptr[1] << 8); }
 
 static unsigned long readU32(const unsigned char* ptr) {
   return ptr[0] + (ptr[1] << 8) + (ptr[2] << 16) + (ptr[3] << 24);
 }
 
-void read_chunk_header(FILE* f, int* id, int* options, unsigned long* size,
-                       unsigned long* checksum, unsigned long* extra) {
+void read_chunk_header(FILE* f, int* id, int* options, unsigned long* size, unsigned long* checksum,
+                       unsigned long* extra) {
   unsigned char buffer[16];
   fread(buffer, 1, 16, f);
 
@@ -202,8 +198,7 @@ int unpack_file(const char* input_file) {
     size_t pos = ftell(in);
     if (pos >= fsize) break;
 
-    read_chunk_header(in, &chunk_id, &chunk_options, &chunk_size,
-                      &chunk_checksum, &chunk_extra);
+    read_chunk_header(in, &chunk_id, &chunk_options, &chunk_size, &chunk_checksum, &chunk_extra);
 
     if ((chunk_id == 1) && (chunk_size > 10) && (chunk_size < BLOCK_SIZE)) {
       /* close current file, if any */
@@ -256,8 +251,7 @@ int unpack_file(const char* input_file) {
           printf("\n");
           memset(progress, ' ', 20);
           if (strlen(output_file) < 16)
-            for (c = 0; c < (int)strlen(output_file); c++)
-              progress[c] = output_file[c];
+            for (c = 0; c < (int)strlen(output_file); c++) progress[c] = output_file[c];
           else {
             for (c = 0; c < 13; c++) progress[c] = output_file[c];
             progress[13] = '.';
@@ -336,8 +330,7 @@ int unpack_file(const char* input_file) {
             printf("Got %08lX Expecting %08lX\n", checksum, chunk_checksum);
           } else {
             /* decompress and verify */
-            remaining = fastlz_decompress(compressed_buffer, chunk_size,
-                                          decompressed_buffer, chunk_extra);
+            remaining = fastlz_decompress(compressed_buffer, chunk_size, decompressed_buffer, chunk_extra);
             if (remaining != chunk_extra) {
               fclose(f);
               f = 0;
@@ -414,8 +407,7 @@ int main(int argc, char** argv) {
     if (argv[i])
       if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version")) {
         printf("6unpack: high-speed file compression tool\n");
-        printf("Version %s (using FastLZ %s)\n", SIXPACK_VERSION_STRING,
-               FASTLZ_VERSION_STRING);
+        printf("Version %s (using FastLZ %s)\n", SIXPACK_VERSION_STRING, FASTLZ_VERSION_STRING);
         printf("Copyright (C) Ariya Hidayat\n");
         printf("\n");
         return 0;

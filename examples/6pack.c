@@ -60,24 +60,18 @@ static unsigned char sixpack_magic[8] = {137, '6', 'P', 'K', 13, 10, 26, 10};
 #define BLOCK_SIZE (2 * 64 * 1024)
 
 /* prototypes */
-static unsigned long update_adler32(unsigned long checksum, const void* buf,
-                                    int len);
+static unsigned long update_adler32(unsigned long checksum, const void* buf, int len);
 void usage(void);
 int detect_magic(FILE* f);
 void write_magic(FILE* f);
-void write_chunk_header(FILE* f, int id, int options, unsigned long size,
-                        unsigned long checksum, unsigned long extra);
-unsigned long block_compress(const unsigned char* input, unsigned long length,
-                             unsigned char* output);
-int pack_file_compressed(const char* input_file, int method, int level,
-                         FILE* f);
-int pack_file(int compress_level, const char* input_file,
-              const char* output_file);
+void write_chunk_header(FILE* f, int id, int options, unsigned long size, unsigned long checksum, unsigned long extra);
+unsigned long block_compress(const unsigned char* input, unsigned long length, unsigned char* output);
+int pack_file_compressed(const char* input_file, int method, int level, FILE* f);
+int pack_file(int compress_level, const char* input_file, const char* output_file);
 
 /* for Adler-32 checksum algorithm, see RFC 1950 Section 8.2 */
 #define ADLER32_BASE 65521
-static unsigned long update_adler32(unsigned long checksum, const void* buf,
-                                    int len) {
+static unsigned long update_adler32(unsigned long checksum, const void* buf, int len) {
   const unsigned char* ptr = (const unsigned char*)buf;
   unsigned long s1 = checksum & 0xffff;
   unsigned long s2 = (checksum >> 16) & 0xffff;
@@ -152,8 +146,7 @@ int detect_magic(FILE* f) {
 
 void write_magic(FILE* f) { fwrite(sixpack_magic, 8, 1, f); }
 
-void write_chunk_header(FILE* f, int id, int options, unsigned long size,
-                        unsigned long checksum, unsigned long extra) {
+void write_chunk_header(FILE* f, int id, int options, unsigned long size, unsigned long checksum, unsigned long extra) {
   unsigned char buffer[16];
 
   buffer[0] = id & 255;
@@ -176,8 +169,7 @@ void write_chunk_header(FILE* f, int id, int options, unsigned long size,
   fwrite(buffer, 16, 1, f);
 }
 
-int pack_file_compressed(const char* input_file, int method, int level,
-                         FILE* f) {
+int pack_file_compressed(const char* input_file, int method, int level, FILE* f) {
   FILE* in;
   unsigned long fsize;
   unsigned long checksum;
@@ -332,8 +324,7 @@ int pack_file_compressed(const char* input_file, int method, int level,
   return 0;
 }
 
-int pack_file(int compress_level, const char* input_file,
-              const char* output_file) {
+int pack_file(int compress_level, const char* input_file, const char* output_file) {
   FILE* f;
   int result;
 
@@ -446,15 +437,13 @@ int benchmark_speed(int compress_level, const char* input_file) {
         y++;
       }
 
-      mbs = ((double)i * (double)y) / ((double)(GetTickCount() - mbs) / 1000.) /
-            1000000.;
+      mbs = ((double)i * (double)y) / ((double)(GetTickCount() - mbs) / 1000.) / 1000000.;
       /*printf(" %.1f Mbyte/s  ", mbs);*/
       if (fastest < mbs) fastest = mbs;
     }
 
-    printf("\nCompressed %d bytes into %d bytes (%.1f%%) at %.1f Mbyte/s.\n",
-           (unsigned int)i, (unsigned int)u, (double)u / (double)i * 100.,
-           fastest);
+    printf("\nCompressed %d bytes into %d bytes (%.1f%%) at %.1f Mbyte/s.\n", (unsigned int)i, (unsigned int)u,
+           (double)u / (double)i * 100., fastest);
 
 #if 1
     fastest = 0.0;
@@ -471,14 +460,12 @@ int benchmark_speed(int compress_level, const char* input_file) {
         y++;
       }
 
-      mbs = ((double)i * (double)y) / ((double)(GetTickCount() - mbs) / 1000.) /
-            1000000.;
+      mbs = ((double)i * (double)y) / ((double)(GetTickCount() - mbs) / 1000.) / 1000000.;
       /*printf(" %.1f Mbyte/s  ", mbs);*/
       if (fastest < mbs) fastest = mbs;
     }
 
-    printf("\nDecompressed at %.1f Mbyte/s.\n\n(1 MB = 1000000 byte)\n",
-           fastest);
+    printf("\nDecompressed at %.1f Mbyte/s.\n\n(1 MB = 1000000 byte)\n", fastest);
 #endif
   }
 
@@ -524,8 +511,7 @@ int main(int argc, char** argv) {
     /* check for version information */
     if (!strcmp(argument, "-v") || !strcmp(argument, "--version")) {
       printf("6pack: high-speed file compression tool\n");
-      printf("Version %s (using FastLZ %s)\n", SIXPACK_VERSION_STRING,
-             FASTLZ_VERSION_STRING);
+      printf("Version %s (using FastLZ %s)\n", SIXPACK_VERSION_STRING, FASTLZ_VERSION_STRING);
       printf("Copyright (C) Ariya Hidayat\n");
       printf("\n");
       return 0;

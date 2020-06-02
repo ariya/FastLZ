@@ -11,7 +11,7 @@ jobs:
     - run: sudo apt install -y clang-format-6.0
       name: Install clang-format
     - run: clang-format-6.0 --version
-    - run: clang-format-6.0 -i --style=google *.h *.c tests/*.c examples/*.c
+    - run: clang-format-6.0 -i --style='{BasedOnStyle: "google", ColumnLimit: 120}' *.h *.c tests/*.c examples/*.c
       name: Run code formatter
     - run: git diff
     - run: git diff --quiet HEAD

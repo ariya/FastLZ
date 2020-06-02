@@ -38,8 +38,7 @@ int compare(const char* name, const uint8_t* a, const uint8_t* b, int size) {
     if (a[i] != b[i]) {
       bad = 1;
       printf("Error on %s!\n", name);
-      printf("Different at index %d: expecting %02x,actual %02x\n", i, a[i],
-             b[i]);
+      printf("Different at index %d: expecting %02x,actual %02x\n", i, a[i], b[i]);
       break;
     }
   }
@@ -83,12 +82,10 @@ void test_ref_decompressor_level1(const char* name, const char* file_name) {
   printf("Compressing. Please wait...\n");
 #endif
   uint8_t* compressed_buffer = malloc(1.05 * file_size);
-  int compressed_size =
-      fastlz_compress_level(1, file_buffer, file_size, compressed_buffer);
+  int compressed_size = fastlz_compress_level(1, file_buffer, file_size, compressed_buffer);
   double ratio = (100.0 * compressed_size) / file_size;
 #ifdef LOG
-  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size,
-         compressed_size, ratio);
+  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size, compressed_size, ratio);
 #endif
 
 #ifdef LOG
@@ -96,8 +93,7 @@ void test_ref_decompressor_level1(const char* name, const char* file_name) {
 #endif
   uint8_t* uncompressed_buffer = malloc(file_size);
   memset(uncompressed_buffer, '-', file_size);
-  REF_Level1_decompress(compressed_buffer, compressed_size,
-                        uncompressed_buffer);
+  REF_Level1_decompress(compressed_buffer, compressed_size, uncompressed_buffer);
 #ifdef LOG
   printf("Comparing. Please wait...\n");
 #endif
@@ -113,8 +109,7 @@ void test_ref_decompressor_level1(const char* name, const char* file_name) {
 #ifdef LOG
   printf("OK.\n");
 #else
-  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size,
-         ratio);
+  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size, ratio);
 #endif
 }
 
@@ -151,12 +146,10 @@ void test_ref_decompressor_level2(const char* name, const char* file_name) {
   printf("Compressing. Please wait...\n");
 #endif
   uint8_t* compressed_buffer = malloc(1.05 * file_size);
-  int compressed_size =
-      fastlz_compress_level(2, file_buffer, file_size, compressed_buffer);
+  int compressed_size = fastlz_compress_level(2, file_buffer, file_size, compressed_buffer);
   double ratio = (100.0 * compressed_size) / file_size;
 #ifdef LOG
-  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size,
-         compressed_size, ratio);
+  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size, compressed_size, ratio);
 #endif
 
 #ifdef LOG
@@ -168,8 +161,7 @@ void test_ref_decompressor_level2(const char* name, const char* file_name) {
   /* intentionally mask out the block tag */
   compressed_buffer[0] = compressed_buffer[0] & 31;
 
-  REF_Level2_decompress(compressed_buffer, compressed_size,
-                        uncompressed_buffer);
+  REF_Level2_decompress(compressed_buffer, compressed_size, uncompressed_buffer);
 #ifdef LOG
   printf("Comparing. Please wait...\n");
 #endif
@@ -185,8 +177,7 @@ void test_ref_decompressor_level2(const char* name, const char* file_name) {
 #ifdef LOG
   printf("OK.\n");
 #else
-  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size,
-         ratio);
+  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size, ratio);
 #endif
 }
 
@@ -224,12 +215,10 @@ void test_roundtrip_level1(const char* name, const char* file_name) {
   printf("Compressing. Please wait...\n");
 #endif
   uint8_t* compressed_buffer = malloc(1.05 * file_size);
-  int compressed_size =
-      fastlz_compress_level(1, file_buffer, file_size, compressed_buffer);
+  int compressed_size = fastlz_compress_level(1, file_buffer, file_size, compressed_buffer);
   double ratio = (100.0 * compressed_size) / file_size;
 #ifdef LOG
-  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size,
-         compressed_size, ratio);
+  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size, compressed_size, ratio);
 #endif
 
 #ifdef LOG
@@ -237,8 +226,7 @@ void test_roundtrip_level1(const char* name, const char* file_name) {
 #endif
   uint8_t* uncompressed_buffer = malloc(file_size);
   memset(uncompressed_buffer, '-', file_size);
-  fastlz_decompress(compressed_buffer, compressed_size, uncompressed_buffer,
-                    file_size);
+  fastlz_decompress(compressed_buffer, compressed_size, uncompressed_buffer, file_size);
 #ifdef LOG
   printf("Comparing. Please wait...\n");
 #endif
@@ -254,8 +242,7 @@ void test_roundtrip_level1(const char* name, const char* file_name) {
 #ifdef LOG
   printf("OK.\n");
 #else
-  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size,
-         ratio);
+  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size, ratio);
 #endif
 }
 
@@ -293,12 +280,10 @@ void test_roundtrip_level2(const char* name, const char* file_name) {
   printf("Compressing. Please wait...\n");
 #endif
   uint8_t* compressed_buffer = malloc(1.05 * file_size);
-  int compressed_size =
-      fastlz_compress_level(2, file_buffer, file_size, compressed_buffer);
+  int compressed_size = fastlz_compress_level(2, file_buffer, file_size, compressed_buffer);
   double ratio = (100.0 * compressed_size) / file_size;
 #ifdef LOG
-  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size,
-         compressed_size, ratio);
+  printf("Compressing was completed: %ld -> %ld (%.2f%%)\n", file_size, compressed_size, ratio);
 #endif
 
 #ifdef LOG
@@ -306,8 +291,7 @@ void test_roundtrip_level2(const char* name, const char* file_name) {
 #endif
   uint8_t* uncompressed_buffer = malloc(file_size);
   memset(uncompressed_buffer, '-', file_size);
-  fastlz_decompress(compressed_buffer, compressed_size, uncompressed_buffer,
-                    file_size);
+  fastlz_decompress(compressed_buffer, compressed_size, uncompressed_buffer, file_size);
 #ifdef LOG
   printf("Comparing. Please wait...\n");
 #endif
@@ -323,8 +307,7 @@ void test_roundtrip_level2(const char* name, const char* file_name) {
 #ifdef LOG
   printf("OK.\n");
 #else
-  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size,
-         ratio);
+  printf("%25s %10ld  -> %10d  (%.2f%%)\n", name, file_size, compressed_size, ratio);
 #endif
 }
 

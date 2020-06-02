@@ -99,9 +99,7 @@ static void fastlz_memmove(uint8_t* dest, const uint8_t* src, uint32_t count) {
   }
 }
 
-static void fastlz_memcpy(uint8_t* dest, const uint8_t* src, uint32_t count) {
-  memcpy(dest, src, count);
-}
+static void fastlz_memcpy(uint8_t* dest, const uint8_t* src, uint32_t count) { memcpy(dest, src, count); }
 
 #endif
 
@@ -301,9 +299,7 @@ int fastlz1_compress(const void* input, int length, void* output) {
       ref = ip_start + htab[hash];
       htab[hash] = ip - ip_start;
       distance = ip - ref;
-      cmp = FASTLZ_LIKELY(distance < MAX_L1_DISTANCE)
-                ? flz_readu32(ref) & 0xffffff
-                : 0x1000000;
+      cmp = FASTLZ_LIKELY(distance < MAX_L1_DISTANCE) ? flz_readu32(ref) & 0xffffff : 0x1000000;
       if (FASTLZ_UNLIKELY(ip >= ip_limit)) break;
       ++ip;
     } while (seq != cmp);
@@ -336,8 +332,7 @@ int fastlz1_compress(const void* input, int length, void* output) {
   return op - (uint8_t*)output;
 }
 
-int fastlz1_decompress(const void* input, int length, void* output,
-                       int maxout) {
+int fastlz1_decompress(const void* input, int length, void* output, int maxout) {
   const uint8_t* ip = (const uint8_t*)input;
   const uint8_t* ip_limit = ip + length;
   const uint8_t* ip_bound = ip_limit - 2;
@@ -438,9 +433,7 @@ int fastlz2_compress(const void* input, int length, void* output) {
       ref = ip_start + htab[hash];
       htab[hash] = ip - ip_start;
       distance = ip - ref;
-      cmp = FASTLZ_LIKELY(distance < MAX_FARDISTANCE)
-                ? flz_readu32(ref) & 0xffffff
-                : 0x1000000;
+      cmp = FASTLZ_LIKELY(distance < MAX_FARDISTANCE) ? flz_readu32(ref) & 0xffffff : 0x1000000;
       if (FASTLZ_UNLIKELY(ip >= ip_limit)) break;
       ++ip;
     } while (seq != cmp);
@@ -485,8 +478,7 @@ int fastlz2_compress(const void* input, int length, void* output) {
   return op - (uint8_t*)output;
 }
 
-int fastlz2_decompress(const void* input, int length, void* output,
-                       int maxout) {
+int fastlz2_decompress(const void* input, int length, void* output, int maxout) {
   const uint8_t* ip = (const uint8_t*)input;
   const uint8_t* ip_limit = ip + length;
   const uint8_t* ip_bound = ip_limit - 2;
@@ -558,8 +550,7 @@ int fastlz_decompress(const void* input, int length, void* output, int maxout) {
   return 0;
 }
 
-int fastlz_compress_level(int level, const void* input, int length,
-                          void* output) {
+int fastlz_compress_level(int level, const void* input, int length, void* output) {
   if (level == 1) return fastlz1_compress(input, length, output);
   if (level == 2) return fastlz2_compress(input, length, output);
 
