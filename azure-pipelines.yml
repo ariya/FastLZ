@@ -275,6 +275,8 @@ jobs:
       cd enwik
       unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
+  - script: sudo apt-get -y -qq update
+    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
@@ -310,6 +312,8 @@ jobs:
       cd enwik
       unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
+  - script: sudo apt-get -y -qq update
+    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
@@ -345,6 +349,8 @@ jobs:
       cd enwik
       unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
+  - script: sudo apt-get -y -qq update
+    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
@@ -380,6 +386,8 @@ jobs:
       cd enwik
       unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
+  - script: sudo apt-get -y -qq update
+    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
@@ -479,6 +487,8 @@ jobs:
       cd enwik
       unzip enwik8.zip
     displayName: 'Retrieve test compression corpus'
+  - script: sudo apt-get -y -qq update
+    displayName: 'apt-get update'
   - script: sudo apt install -y qemu-user
     displayName: 'Install requirements'
   - script: |
