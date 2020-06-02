@@ -24,17 +24,6 @@ jobs:
     workingDirectory: tests
     displayName: 'Perform round-trip tests with disabling memmove'
 
-- job: 'CodeQuality'
-  pool:
-    vmImage: 'macOS-latest'
-  steps:
-  - script: brew install clang-format && clang-format --version
-    displayName: 'Install clang-format'
-  - script: clang-format -i --style=google *.h *.c tests/*.c examples/*.c
-    displayName: 'Run code formatter'
-  - script: git diff --quiet HEAD
-    displayName: 'Check if the styling guide is followed'
-
 - job: 'amd64_linux_clang'
   pool:
     vmImage: 'ubuntu-18.04'
