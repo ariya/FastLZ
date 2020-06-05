@@ -1,4 +1,6 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Code style](https://github.com/ariya/fastlz/workflows/Code%20style/badge.svg)](https://github.com/ariya/fastlz/actions)
+[![Address Sanitizer](https://github.com/ariya/fastlz/workflows/Address%20Sanitizer/badge.svg)](https://github.com/ariya/fastlz/actions)
 [![Build Status](https://dev.azure.com/ariyahidayat/OpenSource/_apis/build/status/ariya.FastLZ?branchName=master)](https://dev.azure.com/ariyahidayat/OpenSource/_build/latest?definitionId=22&branchName=master)
 
 ## Overview
