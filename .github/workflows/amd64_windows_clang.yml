@@ -1,0 +1,36 @@
+name: amd64_windows_clang
+
+on: [push, pull_request]
+
+jobs:
+
+  amd64_windows_clang:
+    runs-on: windows-2019
+    env:
+      CC: clang
+    steps:
+    - uses: actions/checkout@v2
+    - name: Retrieve test compression corpus
+      run: |
+        git clone https://github.com/ariya/compression-corpus.git
+        cd compression-corpus
+        cd enwik
+        unzip enwik8.zip
+    - run: echo "::add-path::C:\\msys64\\usr\\bin"
+    - run: pacman --version
+    - run: pacman -Sy
+    - run: pacman --noconfirm -S pacman-mirrors
+    - run: pacman --noconfirm -S mingw64/mingw-w64-x86_64-clang
+    - run: echo "::add-path::C:\\msys64\\mingw64\\bin"
+    - run: clang --version
+    - run: cd tests && make roundtrip
+      name: Perform round-trip tests
+    - name: 'Build examples: 6pack and 6unpack'
+      run: cd examples && make
+    - name: 'Run examples: 6pack and 6unpack'
+      run: |
+        cd examples
+        ./6pack -v
+        ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
+        ./6unpack -v
+        ./6unpack archive.6pk
