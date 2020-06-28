@@ -1,42 +1,5 @@
 jobs:
 
-- job: 'i686_linux_gcc'
-  pool:
-    vmImage: 'ubuntu-18.04'
-  steps:
-  - script: |
-      git clone https://github.com/ariya/compression-corpus.git
-      cd compression-corpus
-      cd enwik
-      unzip enwik8.zip
-    displayName: 'Retrieve test compression corpus'
-  - script: sudo apt-get -y -qq update
-    displayName: 'apt-get update'
-  - script: sudo apt install -y qemu-user
-    displayName: 'Install requirements'
-  - script: |
-      git clone --depth 1 https://github.com/dockcross/dockcross.git && cd dockcross
-      docker run --rm dockcross/linux-x86 > ./dockcross-linux-x86
-      chmod +x ./dockcross-linux-x86
-    displayName: 'Prepare Dockcross'
-  - script: ./dockcross/dockcross-linux-x86 bash -c '$CC --version'
-    displayName: 'Verify tools version'
-  - script: |
-      ./dockcross/dockcross-linux-x86 bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c refimpl.c'
-      cd tests
-      file ./test_roundtrip
-      qemu-i386 ./test_roundtrip
-    displayName: 'Perform round-trip tests'
-  - script: |
-      ./dockcross/dockcross-linux-x86 bash -c 'cd examples && $CC -o 6pack -Wall -std=c90 -static  -I.. 6pack.c ../fastlz.c'
-      ./dockcross/dockcross-linux-x86 bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
-      cd examples
-      qemu-i386 ./6pack -v
-      qemu-i386 ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
-      qemu-i386 ./6unpack -v
-      qemu-i386 ./6unpack archive.6pk
-    displayName: 'Build and run examples: 6pack and 6unpack'
-
 - job: 'i686_macos_clang'
   condition: eq(1, 2)
   pool:
