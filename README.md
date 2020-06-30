@@ -1,7 +1,6 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Code style](https://github.com/ariya/fastlz/workflows/Code%20style/badge.svg)](https://github.com/ariya/fastlz/actions)
 [![Address Sanitizer](https://github.com/ariya/fastlz/workflows/Address%20Sanitizer/badge.svg)](https://github.com/ariya/fastlz/actions)
-[![Build Status](https://dev.azure.com/ariyahidayat/OpenSource/_apis/build/status/ariya.FastLZ?branchName=master)](https://dev.azure.com/ariyahidayat/OpenSource/_build/latest?definitionId=22&branchName=master)
 
 ## Overview
 
@@ -36,8 +35,6 @@ For [Vcpkg](https://github.com/microsoft/vcpkg) users, FastLZ is [already availa
 A simple file compressor called `6pack` is included as an example on how to use FastLZ. The corresponding decompressor is `6unpack`.
 
 FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as GCC, Clang, Intel C++ Compiler, Visual Studio and even Tiny CC. FastLZ works well on a number of architectures, from Intel/AMD (32-bit and 64-bit), ARM (32-bit and 64-bit), and MIPS.
-
-[![Build Status](https://dev.azure.com/ariyahidayat/OpenSource/_apis/build/status/ariya.FastLZ?branchName=master)](https://dev.azure.com/ariyahidayat/OpenSource/_build/latest?definitionId=22&branchName=master)
 
 The continuous integration system runs an extensive set of compression-decompression round trips on the following systems:
 
