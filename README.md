@@ -34,101 +34,37 @@ For [Vcpkg](https://github.com/microsoft/vcpkg) users, FastLZ is [already availa
 
 A simple file compressor called `6pack` is included as an example on how to use FastLZ. The corresponding decompressor is `6unpack`.
 
-FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as GCC, Clang, Intel C++ Compiler, Visual Studio and even Tiny CC. FastLZ works well on a number of architectures, from Intel/AMD (32-bit and 64-bit), ARM (32-bit and 64-bit), and MIPS.
+FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as GCC, Clang, Intel C++ Compiler, Visual Studio and even Tiny CC. FastLZ works well on a number of architectures (32-bit and 64-bit, big endian and little endian), from Intel/AMD, ARM, and MIPS.
 
 The continuous integration system runs an extensive set of compression-decompression round trips on the following systems:
 
 
-<table>
-<tbody>
-<tr align=center>
-  <td></td>
-  <td></td>
-  <td>Clang</td>
-  <td>GCC</td>
-  <td>TinyCC</td>
-  <td>VS 2017</td>
-  <td>VS 2019</td>
-</tr>
-<tr align=center>
-  <td rowspan=3>amd64</td>
-  <td>Linux</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td></td>
-  <td></td>
-</tr>
-<tr align=center>
-  <td>macOS</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td></td>
-  <td></td>
-  <td></td>
-</tr>
-<tr align=center>
-  <td>Windows</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-</tr>
-<tr align=center>
-  <td rowspan=3>i686</td>
-  <td>Linux</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td></td>
-  <td></td>
-</tr>
-<tr align=center>
-  <td>macOS</td>
-  <td></td>
-  <td></td>
-  <td></td>
-  <td></td>
-  <td></td>
-</tr>
-<tr align=center>
-  <td>Windows</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-  <td>&#x2714;</td>
-</tr>
-<tr align=center>
-  <td>arm64</td>
-  <td>Linux</td>
-  <td></td>
-  <td>&#x2714;</td>
-  <td></td>
-  <td></td>
-  <td></td>
-</tr>
-<tr align=center>
-  <td>armhf</td>
-  <td>Linux</td>
-  <td></td>
-  <td>&#x2714;</td>
-  <td></td>
-  <td></td>
-  <td></td>
-</tr>
-<tr align=center>
-  <td>mips</td>
-  <td>Linux</td>
-  <td></td>
-  <td>&#x2714;</td>
-  <td></td>
-  <td></td>
-  <td></td>
-</tr>
-</tbody>
-</table>
+For more details, check the corresponding [GitHub Actions build logs](https://github.com/ariya/FastLZ/actions).
+
+|              |                                                                                             |                                                                                                   |                                                                                             |
+|--------------|---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| **amd64**    | **Linux**                                                                                   | **Windows**                                                                                       | **macOS**                                                                                   |
+|          GCC | ![amd64_linux_gcc](https://github.com/ariya/FastLZ/workflows/amd64_linux_gcc/badge.svg)     | ![amd64_windows_gcc](https://github.com/ariya/FastLZ/workflows/amd64_windows_gcc/badge.svg)       | ![amd64_macos_gcc](https://github.com/ariya/FastLZ/workflows/amd64_macos_gcc/badge.svg)     |
+|        Clang | ![amd64_linux_clang](https://github.com/ariya/FastLZ/workflows/amd64_linux_clang/badge.svg) | ![amd64_windows_clang](https://github.com/ariya/FastLZ/workflows/amd64_windows_clang/badge.svg)   | ![amd64_macos_clang](https://github.com/ariya/FastLZ/workflows/amd64_macos_clang/badge.svg) |
+|     Intel CC | ![amd64_linux_icc](https://github.com/ariya/FastLZ/workflows/amd64_linux_icc/badge.svg)     |                                                                                                   |                                                                                             |
+|       TinyCC | ![amd64_linux_tcc](https://github.com/ariya/FastLZ/workflows/amd64_linux_tcc/badge.svg)     | |                                                                                                 |                                                                                             |
+|      VS 2017 |                                                                                             | ![amd64_windows_vs2017](https://github.com/ariya/FastLZ/workflows/amd64_windows_vs2017/badge.svg) |                                                                                             |
+|      VS 2019 |                                                                                             | ![amd64_windows_vs2019](https://github.com/ariya/FastLZ/workflows/amd64_windows_vs2019/badge.svg) |                                                                                             |
+| **i686**     | **Linux**                                                                                   | **Windows**                                                                                       | **macOS**                                                                                   |
+|          GCC | ![i686_linux_gcc](https://github.com/ariya/FastLZ/workflows/i686_linux_gcc/badge.svg)       |                                                                                                   |                                                                                             |
+|        Clang | ![i686_linux_clang](https://github.com/ariya/FastLZ/workflows/i686_linux_clang/badge.svg)   |                                                                                                   |                                                                                             |
+|      VS 2017 |                                                                                             | ![i686_windows_vs2017](https://github.com/ariya/FastLZ/workflows/i686_windows_vs2017/badge.svg)   |                                                                                             |
+|      VS 2019 |                                                                                             | ![i686_windows_vs2019](https://github.com/ariya/FastLZ/workflows/i686_windows_vs2019/badge.svg)   |                                                                                             |
+| **arm64**    | **Linux**                                                                                   | **Windows**                                                                                       | **macOS**                                                                                   |
+|          GCC |  ![arm64_linux_gcc](https://github.com/ariya/FastLZ/workflows/arm64_linux_gcc/badge.svg)    |                                                                                                   |                                                                                             |
+| **armhf**    | **Linux**                                                                                   | **Windows**                                                                                       | **macOS**                                                                                   |
+|          GCC |  ![armhf_linux_gcc](https://github.com/ariya/FastLZ/workflows/armhf_linux_gcc/badge.svg)    |                                                                                                   |                                                                                             |
+| **mips**     | **Linux**                                                                                   | **Windows**                                                                                       | **macOS**                                                                                   |
+|          GCC |  ![mips_linux_gcc](https://github.com/ariya/FastLZ/workflows/mips_linux_gcc/badge.svg)      |                                                                                                   |                                                                                             |
+| **mips64**   | **Linux**                                                                                   | **Windows**                                                                                       | **macOS**                                                                                   |
+|          GCC |  ![mips64_linux_gcc](https://github.com/ariya/FastLZ/workflows/mips64_linux_gcc/badge.svg)  |                                                                                                   |                                                                                             |
+
+
 
 ## Block Format
 
