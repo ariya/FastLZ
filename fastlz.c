@@ -25,6 +25,10 @@
 
 #include <stdint.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+
+
 /*
  * Always check for bound when decompressing.
  * Generally it is best to leave it defined.
@@ -169,7 +173,7 @@ static uint32_t flz_cmp(const uint8_t* p, const uint8_t* q, const uint8_t* r) {
 static void flz_copy64(uint8_t* dest, const uint8_t* src, uint32_t count) {
   const uint8_t* p = (const uint8_t*)src;
   uint8_t* q = (uint8_t*)dest;
-  int c;
+  unsigned c;
   for (c = 0; c < count * 8; ++c) {
     *q++ = *p++;
   }
@@ -556,3 +560,5 @@ int fastlz_compress_level(int level, const void* input, int length, void* output
 
   return 0;
 }
+
+#pragma GCC diagnostic pop
