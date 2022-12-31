@@ -66,7 +66,7 @@ For more details, check the corresponding [GitHub Actions build logs](https://gi
 
 Let us assume that FastLZ compresses an array of bytes, called the _uncompressed block_, into another array of bytes, called the _compressed block_. To understand what will be stored in the compressed block, it is illustrative to demonstrate how FastLZ will _decompress_ the block to retrieve the original uncompressed block.
 
-The first 5-bit of the block, i.e. the 5 most-significant bits of the first byte, is the **block tag**. Currently the block tag determines the compression level used to produce the compressed block.
+The first 3-bit of the block, i.e. the 3 most-significant bits of the first byte, is the **block tag**. Currently the block tag determines the compression level used to produce the compressed block.
 
 |Block tag|Compression level|
 |---------|-----------------|
@@ -86,7 +86,7 @@ Each instruction starts with a 1-byte opcode, 2-byte opcode, or 3-byte opcode.
 |-----------|------------------|--------------------|--|
 | Literal run | `000`, L&#x2085;-L&#x2080; | -|- |
 | Short match | M&#x2082;-M&#x2080;, R&#x2081;&#x2082;-R&#x2088; | R&#x2087;-R&#x2080; | - |
-| Long match | `111`, R&#x2081;&#x2082;-R&#x2088; | M&#x2087;-R&#x2080; | R&#x2087;-R&#x2080; |
+| Long match | `111`, R&#x2081;&#x2082;-R&#x2088; | M&#x2087;-M&#x2080; | R&#x2087;-R&#x2080; |
 
 Note that the _very first_ instruction in a compressed block is always a literal run.
 
