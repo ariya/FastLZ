@@ -6,6 +6,7 @@ jobs:
 
   mips64_linux_gcc:
     runs-on: ubuntu-20.04
+    timeout-minutes: 5
     env:
       CC: mips64-linux-musl-gcc
     steps:

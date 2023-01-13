@@ -6,6 +6,7 @@ jobs:
 
   amd64_linux_clang:
     runs-on: ubuntu-20.04
+    timeout-minutes: 5
     env:
       CC: clang
     steps:

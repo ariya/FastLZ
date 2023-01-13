@@ -6,6 +6,7 @@ jobs:
 
   asan:
     runs-on: ubuntu-20.04
+    timeout-minutes: 5
     env:
        CC: gcc
     steps:

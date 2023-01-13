@@ -6,6 +6,7 @@ jobs:
 
   i686_windows_vs2019:
     runs-on: windows-2019
+    timeout-minutes: 5
     steps:
     - uses: actions/checkout@v2
     - name: Retrieve test compression corpus

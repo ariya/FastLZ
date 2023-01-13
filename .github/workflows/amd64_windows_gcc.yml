@@ -6,6 +6,7 @@ jobs:
 
   amd64_windows_gcc:
     runs-on: windows-2019
+    timeout-minutes: 5
     env:
       CC: gcc
     steps:
