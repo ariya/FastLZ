@@ -28,7 +28,6 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 
-
 /*
  * Always check for bound when decompressing.
  * Generally it is best to leave it defined.
