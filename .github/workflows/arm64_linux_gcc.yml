@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     env:
-      CC: aarch64-linux-musl-gcc
+      CC: /opt/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc
     steps:
     - uses: actions/checkout@v2
     - name: Retrieve test compression corpus
@@ -23,8 +23,8 @@ jobs:
       run: |
         curl -O http://musl.cc/aarch64-linux-musl-cross.tgz
         tar xzf aarch64-linux-musl-cross.tgz -C /opt
-    - run: echo "::add-path::/opt/aarch64-linux-musl-cross/bin/"
-    - run: aarch64-linux-musl-gcc --version
+    - name: Verify compiler version
+      run: /opt/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc --version
     - name: Perform round-trip tests
       run: |
         cd tests
