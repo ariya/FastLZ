@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
 
   mips64_linux_gcc:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       CC: mips64-linux-musl-gcc
     steps:
