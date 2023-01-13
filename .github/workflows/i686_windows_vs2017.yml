@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
 
   i686_windows_vs2017:
-    runs-on: windows-2016
+    runs-on: windows-2019
     steps:
     - uses: actions/checkout@v2
     - name: Retrieve test compression corpus
