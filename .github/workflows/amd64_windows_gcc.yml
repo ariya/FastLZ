@@ -17,7 +17,9 @@ jobs:
         cd compression-corpus
         cd enwik
         unzip enwik8.zip
-    - run: echo "::add-path::C:\\msys64\\usr\\bin"
+    - uses: msys2/setup-msys2@v2
+      with:
+        install: gcc make
     - run: gcc --version
     - run: cd tests && make roundtrip
       name: Perform round-trip tests
