@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
     env:
-      CC: mips64-linux-musl-gcc
+      CC: /opt/mips64-linux-musl-cross/bin/mips64-linux-musl-gcc
     steps:
     - uses: actions/checkout@v2
     - name: Retrieve test compression corpus
@@ -23,8 +23,8 @@ jobs:
       run: |
         curl -O http://musl.cc/mips64-linux-musl-cross.tgz
         tar xzf mips64-linux-musl-cross.tgz -C /opt
-    - run: echo "::add-path::/opt/mips64-linux-musl-cross/bin/"
-    - run: mips64-linux-musl-gcc --version
+    - name: Verify compiler version
+      run: /opt/mips64-linux-musl-cross/bin/mips64-linux-musl-gcc --version
     - name: Perform round-trip tests
       run: |
         cd tests
