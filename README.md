@@ -34,7 +34,7 @@ For [Vcpkg](https://github.com/microsoft/vcpkg) users, FastLZ is [already availa
 
 A simple file compressor called `6pack` is included as an example on how to use FastLZ. The corresponding decompressor is `6unpack`.
 
-FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as GCC, Clang, Visual Studio and even Tiny CC. FastLZ works well on a number of architectures (32-bit and 64-bit, big endian and little endian), from Intel/AMD, ARM, and MIPS.
+FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as [GCC](https://gcc.gnu.org/), [Clang](https://clang.llvm.org/), [Visual Studio](https://visualstudio.microsoft.com/vs/features/cplusplus/), and even [Tiny CC](https://bellard.org/tcc/). FastLZ works well on a number of architectures (32-bit and 64-bit, big endian and little endian), from Intel/AMD, ARM, and MIPS.
 
 The continuous integration system runs an extensive set of compression-decompression round trips on the following systems:
 
