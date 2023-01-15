@@ -34,7 +34,7 @@ For [Vcpkg](https://github.com/microsoft/vcpkg) users, FastLZ is [already availa
 
 A simple file compressor called `6pack` is included as an example on how to use FastLZ. The corresponding decompressor is `6unpack`.
 
-FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as [GCC](https://gcc.gnu.org/), [Clang](https://clang.llvm.org/), [Visual Studio](https://visualstudio.microsoft.com/vs/features/cplusplus/), and even [Tiny CC](https://bellard.org/tcc/). FastLZ works well on a number of architectures (32-bit and 64-bit, big endian and little endian), from Intel/AMD, ARM, and MIPS.
+FastLZ supports any standard-conforming ANSI C/C90 compiler, including the popular ones such as [GCC](https://gcc.gnu.org/), [Clang](https://clang.llvm.org/), [Visual Studio](https://visualstudio.microsoft.com/vs/features/cplusplus/), and even [Tiny CC](https://bellard.org/tcc/). FastLZ works well on a number of architectures (32-bit and 64-bit, big endian and little endian), from Intel/AMD, ARM, MIPS, and RISC-V.
 
 The continuous integration system runs an extensive set of compression-decompression round trips on the following systems:
 
@@ -59,6 +59,8 @@ For more details, check the corresponding [GitHub Actions build logs](https://gi
 |          GCC |  ![arm64_linux_gcc](https://github.com/ariya/FastLZ/workflows/arm64_linux_gcc/badge.svg)    |                                                                                                   |                                                                                             |
 | **mips64**   | **Linux**                                                                                   | **Windows**                                                                                       | **macOS**                                                                                   |
 |          GCC |  ![mips64_linux_gcc](https://github.com/ariya/FastLZ/workflows/mips64_linux_gcc/badge.svg)  |                                                                                                   |                                                                                             |
+| **riscv64**  | **Linux**                                                                                   | **Windows**                                                                                       | **macOS**                                                                                   |
+|          GCC |  ![mips64_linux_gcc](https://github.com/ariya/FastLZ/workflows/riscv64_linux_gcc/badge.svg) |                                                                                                   |                                                                                             |
 
 
 
