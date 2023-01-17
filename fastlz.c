@@ -110,15 +110,9 @@ static void fastlz_memcpy(uint8_t* dest, const uint8_t* src, uint32_t count) { m
 
 static uint32_t flz_readu32(const void* ptr) { return *(const uint32_t*)ptr; }
 
-static uint64_t flz_readu64(const void* ptr) { return *(const uint64_t*)ptr; }
-
 static uint32_t flz_cmp(const uint8_t* p, const uint8_t* q, const uint8_t* r) {
   const uint8_t* start = p;
 
-  if (flz_readu64(p) == flz_readu64(q)) {
-    p += 8;
-    q += 8;
-  }
   if (flz_readu32(p) == flz_readu32(q)) {
     p += 4;
     q += 4;
