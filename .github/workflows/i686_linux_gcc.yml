@@ -7,6 +7,8 @@ jobs:
   i686_linux_gcc:
     runs-on: ubuntu-20.04
     timeout-minutes: 5
+    env:
+      CC: /opt/i686-linux-musl-cross/bin/i686-linux-musl-gcc
     steps:
     - uses: actions/checkout@v3
     - name: Retrieve test compression corpus
@@ -19,21 +21,20 @@ jobs:
     - run: sudo apt install -y qemu-user
     - name: Prepare cross-compiler
       run: |
-        git clone --depth 1 https://github.com/dockcross/dockcross.git && cd dockcross
-        docker run --rm dockcross/linux-x86 > ./dockcross-linux-x86
-        chmod +x ./dockcross-linux-x86
-    - run: ./dockcross/dockcross-linux-x86 bash -c '$CC --version'
+        curl -O https://musl.cc/i686-linux-musl-cross.tgz
+        tar xzf i686-linux-musl-cross.tgz -C /opt
+    - name: Verify compiler version
+      run: /opt/i686-linux-musl-cross/bin/i686-linux-musl-gcc --version
     - name: Perform round-trip tests
       run: |
-        ./dockcross/dockcross-linux-x86 bash -c 'cd tests && $CC -o test_roundtrip -Wall -std=c90 -static  -I.. test_roundtrip.c ../fastlz.c refimpl.c'
         cd tests
+        make test_roundtrip CFLAGS=-static
         file ./test_roundtrip
         qemu-i386 ./test_roundtrip
     - name: 'Build and run examples: 6pack and 6unpack'
       run: |
-        ./dockcross/dockcross-linux-x86 bash -c 'cd examples && $CC -o 6pack -Wall -std=c90 -static  -I.. 6pack.c ../fastlz.c'
-        ./dockcross/dockcross-linux-x86 bash -c 'cd examples && $CC -o 6unpack -Wall -std=c90 -static  -I.. 6unpack.c ../fastlz.c'
         cd examples
+        make CFLAGS=-static
         qemu-i386 ./6pack -v
         qemu-i386 ./6pack ../compression-corpus/enwik/enwik8.txt archive.6pk
         qemu-i386 ./6unpack -v
