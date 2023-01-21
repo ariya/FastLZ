@@ -146,7 +146,7 @@ static uint32_t flz_cmp(const uint8_t* p, const uint8_t* q, const uint8_t* r) {
 #define MAX_L2_DISTANCE 8191
 #define MAX_FARDISTANCE (65535 + MAX_L2_DISTANCE - 1)
 
-#define HASH_LOG 14
+#define HASH_LOG 13
 #define HASH_SIZE (1 << HASH_LOG)
 #define HASH_MASK (HASH_SIZE - 1)
 
