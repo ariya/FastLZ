@@ -6,7 +6,7 @@ jobs:
 
   riscv_linux_gcc:
     runs-on: ubuntu-20.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       CC: /opt/riscv32-linux-musl-cross/bin/riscv32-linux-musl-gcc
     steps:

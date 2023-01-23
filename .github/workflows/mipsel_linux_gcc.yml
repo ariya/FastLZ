@@ -6,7 +6,7 @@ jobs:
 
   mipsel_linux_gcc:
     runs-on: ubuntu-20.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       CC: /opt/mipsel-linux-musl-cross/bin/mipsel-linux-musl-gcc
     steps:

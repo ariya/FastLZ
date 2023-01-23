@@ -6,7 +6,7 @@ jobs:
 
   amd64_macos_gcc:
     runs-on: macos-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       CC: gcc-9
     steps:

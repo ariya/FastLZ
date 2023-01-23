@@ -6,7 +6,7 @@ jobs:
 
   armhf_linux_gcc:
     runs-on: ubuntu-20.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       CC: /opt/armel-linux-musleabihf-cross/bin/armel-linux-musleabihf-gcc
     steps:

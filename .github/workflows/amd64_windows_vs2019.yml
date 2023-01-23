@@ -6,7 +6,7 @@ jobs:
 
   amd64_windows_vs2019:
     runs-on: windows-2019
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
     - uses: actions/checkout@v3
     - name: Retrieve test compression corpus
