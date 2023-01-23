@@ -29,15 +29,6 @@
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 
 /*
- * Always check for bound when decompressing.
- * Generally it is best to leave it defined.
- */
-#define FASTLZ_SAFE
-#if defined(FASTLZ_USE_SAFE_DECOMPRESSOR) && (FASTLZ_USE_SAFE_DECOMPRESSOR == 0)
-#undef FASTLZ_SAFE
-#endif
-
-/*
  * Give hints to the compiler for branch prediction optimization.
  */
 #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 2))
@@ -53,15 +44,6 @@
  */
 #if defined(__x86_64__) || defined(_M_X64)
 #define FLZ_ARCH64
-#endif
-
-#if defined(FASTLZ_SAFE)
-#define FASTLZ_BOUND_CHECK(cond) \
-  if (FASTLZ_UNLIKELY(!(cond))) return 0;
-#else
-#define FASTLZ_BOUND_CHECK(cond) \
-  do {                           \
-  } while (0)
 #endif
 
 #if defined(FASTLZ_USE_MEMMOVE) && (FASTLZ_USE_MEMMOVE == 0)
@@ -225,6 +207,9 @@ static uint8_t* flz1_match(uint32_t len, uint32_t distance, uint8_t* op) {
   }
   return op;
 }
+
+#define FASTLZ_BOUND_CHECK(cond) \
+  if (FASTLZ_UNLIKELY(!(cond))) return 0;
 
 int fastlz1_compress(const void* input, int length, void* output) {
   const uint8_t* ip = (const uint8_t*)input;

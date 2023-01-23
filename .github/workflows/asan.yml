@@ -27,11 +27,3 @@ jobs:
       name: Perform round-trip tests with FASTLZ_USE_MEMMOVE=0
       env:
         CFLAGS: "-g -fno-omit-frame-pointer -fsanitize=address -DFASTLZ_USE_MEMMOVE=0"
-    - run: cd tests && make roundtrip
-      name: Perform round-trip tests with FASTLZ_USE_SAFE_DECOMPRESSOR=0
-      env:
-        CFLAGS: "-g -fno-omit-frame-pointer -fsanitize=address -DFASTLZ_USE_SAFE_DECOMPRESSOR=0"
-    - run: cd tests && make roundtrip
-      name: Perform round-trip tests with FASTLZ_USE_MEMMOVE=0 and FASTLZ_USE_SAFE_DECOMPRESSOR=0
-      env:
-        CFLAGS: "-g -fno-omit-frame-pointer -fsanitize=address -DFASTLZ_USE_MEMMOVE=0 -DFASTLZ_USE_SAFE_DECOMPRESSOR=0"
