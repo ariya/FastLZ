@@ -46,6 +46,13 @@
 #define FLZ_ARCH64
 #endif
 
+/*
+ * Workaround for DJGPP to find uint8_t, uint16_t, etc.
+ */
+#if defined(__MSDOS__) && (defined(__GNUC__))
+#include <stdint-gcc.h>
+#endif
+
 #if defined(FASTLZ_USE_MEMMOVE) && (FASTLZ_USE_MEMMOVE == 0)
 
 static void fastlz_memmove(uint8_t* dest, const uint8_t* src, uint32_t count) {
