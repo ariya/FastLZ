@@ -49,7 +49,7 @@
 /*
  * Workaround for DJGPP to find uint8_t, uint16_t, etc.
  */
-#if defined(__MSDOS__) && (defined(__GNUC__))
+#if defined(__MSDOS__) && defined(__GNUC__)
 #include <stdint-gcc.h>
 #endif
 
