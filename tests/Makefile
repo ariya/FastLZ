@@ -1,5 +1,5 @@
 CFLAGS?=-Wall -std=c90
-TEST_ROUNDTRIP=./test_roundtrip
+TEST_ROUNDTRIP?=./test_roundtrip
 
 all: roundtrip
 
