@@ -95,7 +95,7 @@ The content of the block will vary depending on the compression level.
 
 ### Block Format for Level 1
 
-FastLZ Level 1 impements LZ77 compression algorithm with 8 KB sliding window and up to 264 bytes of match length.
+FastLZ Level 1 implements LZ77 compression algorithm with 8 KB sliding window and up to 264 bytes of match length.
 
 The compressed block consists of one or more **instructions**.
 Each instruction starts with a 1-byte opcode, 2-byte opcode, or 3-byte opcode.
