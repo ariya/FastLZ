@@ -319,7 +319,7 @@ void test_roundtrip_level2(const char* name, const char* file_name) {
 }
 
 int main(int argc, char** argv) {
-  const char* prefix = "../compression-corpus/";
+  const char* default_prefix = "../compression-corpus/";
   const char* names[] = {"canterbury/alice29.txt",
                          "canterbury/asyoulik.txt",
                          "canterbury/cp.html",
@@ -344,6 +344,8 @@ int main(int argc, char** argv) {
                          "silesia/x-ray",
                          "silesia/xml",
                          "enwik/enwik8.txt"};
+
+  const char* prefix = (argc == 2) ? argv[1] : default_prefix;
 
   const int count = sizeof(names) / sizeof(names[0]);
   int i;
