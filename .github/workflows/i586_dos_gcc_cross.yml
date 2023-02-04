@@ -1,10 +1,10 @@
-name: i686_dos_gcc_cross
+name: i586_dos_gcc_cross
 
 on: [push, pull_request]
 
 jobs:
 
-  i686_dos_gcc_cross:
+  i586_dos_gcc_cross:
     runs-on: ubuntu-20.04
     timeout-minutes: 10
     env:
