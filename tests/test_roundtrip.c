@@ -52,6 +52,8 @@ int compare(const char* name, const uint8_t* a, const uint8_t* b, int size) {
   return bad;
 }
 
+#define MAX_FILE_SIZE (100 * 1024 * 1024)
+
 /* prototype, implemented in refimpl.c */
 void REF_Level1_decompress(const uint8_t* input, int length, uint8_t* output);
 void REF_Level2_decompress(const uint8_t* input, int length, uint8_t* output);
@@ -73,9 +75,16 @@ void test_ref_decompressor_level1(const char* name, const char* file_name) {
   fseek(f, 0L, SEEK_END);
   long file_size = ftell(f);
   rewind(f);
+
 #ifdef LOG
   printf("Size is %ld bytes.\n", file_size);
 #endif
+  if (file_size > MAX_FILE_SIZE) {
+    fclose(f);
+    printf("%25s %10ld [skipped, file too big]\n", name, file_size);
+    return;
+  }
+
   uint8_t* file_buffer = malloc(file_size);
   long read = fread(file_buffer, 1, file_size, f);
   fclose(f);
@@ -99,6 +108,10 @@ void test_ref_decompressor_level1(const char* name, const char* file_name) {
   printf("Decompressing. Please wait...\n");
 #endif
   uint8_t* uncompressed_buffer = malloc(file_size);
+  if (uncompressed_buffer == NULL) {
+    printf("%25s %10ld  -> %10d  (%.2f%%)  skipped, can't decompress\n", name, file_size, compressed_size, ratio);
+    return;
+  }
   memset(uncompressed_buffer, '-', file_size);
   REF_Level1_decompress(compressed_buffer, compressed_size, uncompressed_buffer);
 #ifdef LOG
@@ -137,9 +150,16 @@ void test_ref_decompressor_level2(const char* name, const char* file_name) {
   fseek(f, 0L, SEEK_END);
   long file_size = ftell(f);
   rewind(f);
+
 #ifdef LOG
   printf("Size is %ld bytes.\n", file_size);
 #endif
+  if (file_size > MAX_FILE_SIZE) {
+    fclose(f);
+    printf("%25s %10ld [skipped, file too big]\n", name, file_size);
+    return;
+  }
+
   uint8_t* file_buffer = malloc(file_size);
   long read = fread(file_buffer, 1, file_size, f);
   fclose(f);
@@ -163,6 +183,10 @@ void test_ref_decompressor_level2(const char* name, const char* file_name) {
   printf("Decompressing. Please wait...\n");
 #endif
   uint8_t* uncompressed_buffer = malloc(file_size);
+  if (uncompressed_buffer == NULL) {
+    printf("%25s %10ld  -> %10d  (%.2f%%)  skipped, can't decompress\n", name, file_size, compressed_size, ratio);
+    return;
+  }
   memset(uncompressed_buffer, '-', file_size);
 
   /* intentionally mask out the block tag */
@@ -206,9 +230,16 @@ void test_roundtrip_level1(const char* name, const char* file_name) {
   fseek(f, 0L, SEEK_END);
   long file_size = ftell(f);
   rewind(f);
+
 #ifdef LOG
   printf("Size is %ld bytes.\n", file_size);
 #endif
+  if (file_size > MAX_FILE_SIZE) {
+    fclose(f);
+    printf("%25s %10ld [skipped, file too big]\n", name, file_size);
+    return;
+  }
+
   uint8_t* file_buffer = malloc(file_size);
   long read = fread(file_buffer, 1, file_size, f);
   fclose(f);
@@ -232,6 +263,10 @@ void test_roundtrip_level1(const char* name, const char* file_name) {
   printf("Decompressing. Please wait...\n");
 #endif
   uint8_t* uncompressed_buffer = malloc(file_size);
+  if (uncompressed_buffer == NULL) {
+    printf("%25s %10ld  -> %10d  (%.2f%%)  skipped, can't decompress\n", name, file_size, compressed_size, ratio);
+    return;
+  }
   memset(uncompressed_buffer, '-', file_size);
   fastlz_decompress(compressed_buffer, compressed_size, uncompressed_buffer, file_size);
 #ifdef LOG
@@ -271,9 +306,16 @@ void test_roundtrip_level2(const char* name, const char* file_name) {
   fseek(f, 0L, SEEK_END);
   long file_size = ftell(f);
   rewind(f);
+
 #ifdef LOG
   printf("Size is %ld bytes.\n", file_size);
 #endif
+  if (file_size > MAX_FILE_SIZE) {
+    fclose(f);
+    printf("%25s %10ld [skipped, file too big]\n", name, file_size);
+    return;
+  }
+
   uint8_t* file_buffer = malloc(file_size);
   long read = fread(file_buffer, 1, file_size, f);
   fclose(f);
@@ -297,6 +339,13 @@ void test_roundtrip_level2(const char* name, const char* file_name) {
   printf("Decompressing. Please wait...\n");
 #endif
   uint8_t* uncompressed_buffer = malloc(file_size);
+  if (uncompressed_buffer == NULL) {
+    free(file_buffer);
+    free(compressed_buffer);
+    printf("%25s %10ld  -> %10d  (%.2f%%)  skipped, can't decompress OOM\n", name, file_size, compressed_size, ratio);
+    exit(1);
+    return;
+  }
   memset(uncompressed_buffer, '-', file_size);
   fastlz_decompress(compressed_buffer, compressed_size, uncompressed_buffer, file_size);
 #ifdef LOG
