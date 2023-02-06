@@ -52,7 +52,11 @@ int compare(const char* name, const uint8_t* a, const uint8_t* b, int size) {
   return bad;
 }
 
+#if !defined(__MSDOS__)
 #define MAX_FILE_SIZE (100 * 1024 * 1024)
+#else
+#define MAX_FILE_SIZE (32 * 1024 * 1024)
+#endif
 
 /* prototype, implemented in refimpl.c */
 void REF_Level1_decompress(const uint8_t* input, int length, uint8_t* output);

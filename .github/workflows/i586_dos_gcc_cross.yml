@@ -6,7 +6,7 @@ jobs:
 
   i586_dos_gcc_cross:
     runs-on: ubuntu-20.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       CC: /opt/djgpp/bin/i586-pc-msdosdjgpp-gcc
       LDFLAGS: -static
@@ -19,7 +19,6 @@ jobs:
         cd enwik
         unzip enwik8.zip
     - run: sudo apt-get -y -qq update
-    - run: sudo apt install -y qemu-user
     - name: Prepare cross-compiler
       run: |
         curl -OL https://github.com/andrewwutw/build-djgpp/releases/download/v3.3/djgpp-linux64-gcc1210.tar.bz2
@@ -32,10 +31,17 @@ jobs:
         sudo apt update -y
         sudo apt install -y dosemu2
     - run: dosemu --version
+    - name: Perform round-trip tests
+      run: |
+        cd tests
+        ln -s ../compression-corpus/ corpus
+        make test_roundtrip TEST_ROUNDTRIP=testrr
+        file ./testrr.exe
+        dosemu -dumb -K . -t -E "testrr corpus/"
     - name: 'Build and run example: 6pack and 6unpack'
       run: |
         cd examples
-        cp ../compression-corpus/enwik/enwik8.txt .
+        ln -s ../compression-corpus/enwik/enwik8.txt enwik8.txt
         make
         file ./6pack.exe
         dosemu -K . -t -E "6pack.exe -v"
