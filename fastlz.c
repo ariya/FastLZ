@@ -218,7 +218,7 @@ static uint8_t* flz1_match(uint32_t len, uint32_t distance, uint8_t* op) {
 #define FASTLZ_BOUND_CHECK(cond) \
   if (FASTLZ_UNLIKELY(!(cond))) return 0;
 
-int fastlz1_compress(const void* input, int length, void* output) {
+static int fastlz1_compress(const void* input, int length, void* output) {
   const uint8_t* ip = (const uint8_t*)input;
   const uint8_t* ip_start = ip;
   const uint8_t* ip_bound = ip + length - 4; /* because readU32 */
@@ -280,7 +280,7 @@ int fastlz1_compress(const void* input, int length, void* output) {
   return op - (uint8_t*)output;
 }
 
-int fastlz1_decompress(const void* input, int length, void* output, int maxout) {
+static int fastlz1_decompress(const void* input, int length, void* output, int maxout) {
   const uint8_t* ip = (const uint8_t*)input;
   const uint8_t* ip_limit = ip + length;
   const uint8_t* ip_bound = ip_limit - 2;
@@ -352,7 +352,7 @@ static uint8_t* flz2_match(uint32_t len, uint32_t distance, uint8_t* op) {
   return op;
 }
 
-int fastlz2_compress(const void* input, int length, void* output) {
+static int fastlz2_compress(const void* input, int length, void* output) {
   const uint8_t* ip = (const uint8_t*)input;
   const uint8_t* ip_start = ip;
   const uint8_t* ip_bound = ip + length - 4; /* because readU32 */
@@ -426,7 +426,7 @@ int fastlz2_compress(const void* input, int length, void* output) {
   return op - (uint8_t*)output;
 }
 
-int fastlz2_decompress(const void* input, int length, void* output, int maxout) {
+static int fastlz2_decompress(const void* input, int length, void* output, int maxout) {
   const uint8_t* ip = (const uint8_t*)input;
   const uint8_t* ip_limit = ip + length;
   const uint8_t* ip_bound = ip_limit - 2;
