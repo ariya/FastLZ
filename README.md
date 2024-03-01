@@ -102,7 +102,7 @@ Each instruction starts with a 1-byte opcode, 2-byte opcode, or 3-byte opcode.
 
 | Instruction type | Opcode[0] | Opcode[1] | Opcode[2]
 |-----------|------------------|--------------------|--|
-| Literal run | `000`, L&#x2085;-L&#x2080; | -|- |
+| Literal run | `000`, L&#x2084;-L&#x2080; | -|- |
 | Short match | M&#x2082;-M&#x2080;, R&#x2081;&#x2082;-R&#x2088; | R&#x2087;-R&#x2080; | - |
 | Long match | `111`, R&#x2081;&#x2082;-R&#x2088; | M&#x2087;-M&#x2080; | R&#x2087;-R&#x2080; |
 
