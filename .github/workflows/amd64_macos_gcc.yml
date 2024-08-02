@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
 
   amd64_macos_gcc:
-    runs-on: macos-latest
+    runs-on: macos-12
     timeout-minutes: 10
     env:
       CC: gcc-9
