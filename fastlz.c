@@ -297,6 +297,7 @@ static int fastlz1_decompress(const void* input, int length, void* output, int m
         FASTLZ_BOUND_CHECK(ip <= ip_bound);
         len += *ip++;
       }
+      FASTLZ_BOUND_CHECK(ip <= ip_bound);
       ref -= *ip++;
       len += 3;
       FASTLZ_BOUND_CHECK(op + len <= op_limit);
@@ -446,6 +447,7 @@ static int fastlz2_decompress(const void* input, int length, void* output, int m
           code = *ip++;
           len += code;
         } while (code == 255);
+      FASTLZ_BOUND_CHECK(ip <= ip_bound);
       code = *ip++;
       ref -= code;
       len += 3;
@@ -488,6 +490,7 @@ int fastlz_compress(const void* input, int length, void* output) {
 }
 
 int fastlz_decompress(const void* input, int length, void* output, int maxout) {
+  if (length < 1) return 0;
   /* magic identifier for compression level */
   int level = ((*(const uint8_t*)input) >> 5) + 1;
 
