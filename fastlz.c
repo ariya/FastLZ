@@ -117,7 +117,7 @@ static uint32_t flz_cmp(const uint8_t* p, const uint8_t* q, const uint8_t* r) {
 
 static uint32_t flz_readu32(const void* ptr) {
   const uint8_t* p = (const uint8_t*)ptr;
-  return (p[3] << 24) | (p[2] << 16) | (p[1] << 8) | p[0];
+  return (((uint32_t)p[3]) << 24) | (((uint32_t)p[2]) << 16) | (((uint32_t)p[1]) << 8) | (uint32_t)p[0];
 }
 
 static uint32_t flz_cmp(const uint8_t* p, const uint8_t* q, const uint8_t* r) {
@@ -225,8 +225,8 @@ static int fastlz1_compress(const void* input, int length, void* output) {
   const uint8_t* ip_limit = ip + length - 12 - 1;
   uint8_t* op = (uint8_t*)output;
 
-  uint32_t htab[HASH_SIZE];
-  uint32_t seq, hash;
+  uint32_t htab[HASH_SIZE] = {0};
+  uint32_t seq = 0, hash = 0;
 
   /* initializes hash table */
   for (hash = 0; hash < HASH_SIZE; ++hash) htab[hash] = 0;
@@ -238,7 +238,7 @@ static int fastlz1_compress(const void* input, int length, void* output) {
   /* main loop */
   while (FASTLZ_LIKELY(ip < ip_limit)) {
     const uint8_t* ref;
-    uint32_t distance, cmp;
+    uint32_t distance = 0, cmp = 0;
 
     /* find potential match */
     do {
@@ -359,8 +359,8 @@ static int fastlz2_compress(const void* input, int length, void* output) {
   const uint8_t* ip_limit = ip + length - 12 - 1;
   uint8_t* op = (uint8_t*)output;
 
-  uint32_t htab[HASH_SIZE];
-  uint32_t seq, hash;
+  uint32_t htab[HASH_SIZE] = {0};
+  uint32_t seq = 0, hash = 0;
 
   /* initializes hash table */
   for (hash = 0; hash < HASH_SIZE; ++hash) htab[hash] = 0;
@@ -372,7 +372,7 @@ static int fastlz2_compress(const void* input, int length, void* output) {
   /* main loop */
   while (FASTLZ_LIKELY(ip < ip_limit)) {
     const uint8_t* ref;
-    uint32_t distance, cmp;
+    uint32_t distance = 0, cmp = 0;
 
     /* find potential match */
     do {
@@ -440,7 +440,7 @@ static int fastlz2_decompress(const void* input, int length, void* output, int m
       uint32_t ofs = (ctrl & 31) << 8;
       const uint8_t* ref = op - ofs - 1;
 
-      uint8_t code;
+      uint8_t code = 0;
       if (len == 7 - 1) do {
           FASTLZ_BOUND_CHECK(ip <= ip_bound);
           code = *ip++;
